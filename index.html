@@ -1761,6 +1761,9 @@ async function doLogin(){
   try {
     const allRecords = await atFindAll();
     const validRecords = allRecords.filter(r => r.fields && r.fields['Email']);
+    console.log('DEBUG login - id searching for:', id);
+    console.log('DEBUG login - valid records:', validRecords.length);
+    validRecords.forEach(r => console.log('  checking:', (r.fields['Email']||'').toLowerCase().trim(), '===', id, '?', (r.fields['Email']||'').toLowerCase().trim() === id));
     const record = validRecords.find(r => {
       const emailMatch = (r.fields['Email']||'').toLowerCase().trim() === id;
       const userMatch  = (r.fields['Username']||'').toLowerCase().trim() === id;
