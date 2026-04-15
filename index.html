@@ -1699,16 +1699,27 @@ async function doLogin(){
   errEl.textContent='Signing in...';
   errEl.style.color='#7B5EA7';
   try {
-    const { data, error } = await sb.from('nh_users')
+    // First find user by email or username
+    const { data:users, error:findErr } = await sb.from('nh_users')
       .select('*')
-      .or('email.eq.'+id+',username.eq.'+id)
-      .eq('password_hash',pw)
-      .single();
-    if(error||!data){ errEl.style.color='#B84070'; return errEl.textContent='⚠ Incorrect email/username or password.'; }
-    me=data;
-    localStorage.setItem('nh_session', JSON.stringify({id:data.id}));
+      .or('email.eq.'+id+',username.eq.'+id);
+    
+    if(findErr||!users||users.length===0){
+      errEl.style.color='#B84070';
+      return errEl.textContent='⚠ No account found with that email or username.';
+    }
+    
+    // Then check password matches
+    const user = users.find(u => u.password_hash === pw);
+    if(!user){
+      errEl.style.color='#B84070';
+      return errEl.textContent='⚠ Incorrect password. Please try again.';
+    }
+    
+    me=user;
+    localStorage.setItem('nh_session', JSON.stringify({id:user.id}));
     launchApp();
-    showToast('Welcome back, '+data.first_name+'! ✦','Ready to negotiate today?');
+    showToast('Welcome back, '+user.first_name+'! ✦','Ready to negotiate today?');
   } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Connection error: '+e.message; }
 }
 
