@@ -1751,9 +1751,20 @@ async function doLogin(){
   if(!id||!pw) return errEl.textContent='⚠ Please enter your email/username and password.';
   errEl.style.color='#7B5EA7'; errEl.textContent='Signing in...';
   try {
-    const record = await atFind('OR(Email="'+id+'",Username="'+id+'")');
-    if(!record){ errEl.style.color='#B84070'; return errEl.textContent='⚠ No account found with that email or username.'; }
-    if(record.fields['Password']!==pw){ errEl.style.color='#B84070'; return errEl.textContent='⚠ Incorrect password. Please try again.'; }
+    // Search by email OR username using SEARCH() which is more reliable
+    const byEmail = await atFind('LOWER(Email)="'+id+'"');
+    const record = byEmail || await atFind('LOWER(Username)="'+id+'"');
+    if(!record){
+      errEl.style.color='#B84070';
+      return errEl.textContent='⚠ No account found with that email or username.';
+    }
+    // Compare password (trim to handle any accidental spaces)
+    const storedPw = (record.fields['Password']||'').trim();
+    const enteredPw = pw.trim();
+    if(storedPw !== enteredPw){
+      errEl.style.color='#B84070';
+      return errEl.textContent='⚠ Incorrect password. Please try again.';
+    }
     me={id:record.id,...record.fields};
     localStorage.setItem('nh_session',JSON.stringify({id:record.id}));
     launchApp();
