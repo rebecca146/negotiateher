@@ -888,7 +888,7 @@
   <div class="page active" id="page-dashboard">
     <div class="page-header">
       <div>
-        <h2 id="dashGreeting">Good morning ✦</h2>
+        <h2>Good morning, Sarah ✦</h2>
         <p>You're 3 days into your negotiation journey. Keep going.</p>
       </div>
       <button class="btn btn-primary" onclick="showPage('practice', document.querySelector('[onclick*=practice]'))">
@@ -1085,25 +1085,25 @@
     </div>
 
     <div class="scenario-grid">
-      <div class="scenario-card gold" id="sc_salary" onclick="startScenario('salary')">
+      <div class="scenario-card gold" onclick="startScenario('salary')">
         <span class="scenario-badge" style="background:rgba(155,95,192,0.12);color:#7A3FA8">Salary</span>
         <div class="scenario-title">Annual Review Negotiation</div>
         <div class="scenario-desc">Your manager opens with a 3% raise. You've researched the market and know you're worth 18% more. Go.</div>
         <div class="scenario-meta">⏱ ~10 min &nbsp;·&nbsp; ⭐ Intermediate</div>
       </div>
-      <div class="scenario-card rust" id="sc_freelance" onclick="startScenario('freelance')">
+      <div class="scenario-card rust" onclick="startScenario('freelance')">
         <span class="scenario-badge" style="background:rgba(123,94,167,0.12);color:#7A3FA8">Freelance</span>
         <div class="scenario-title">Client Pushes Back on Rate</div>
         <div class="scenario-desc">A potential client says your rate is "too high." They're comparing you to offshore alternatives.</div>
         <div class="scenario-meta">⏱ ~8 min &nbsp;·&nbsp; ⭐⭐ Advanced</div>
       </div>
-      <div class="scenario-card sage" id="sc_promo" onclick="startScenario('promotion')">
+      <div class="scenario-card sage" onclick="startScenario('promotion')">
         <span class="scenario-badge" style="background:rgba(155,95,192,0.12);color:#7B5EA7">Promotion</span>
         <div class="scenario-title">Ask for the Title, Not Just the Work</div>
         <div class="scenario-desc">You've been doing senior-level work without the title. Time to have the conversation.</div>
         <div class="scenario-meta">⏱ ~12 min &nbsp;·&nbsp; ⭐ Intermediate</div>
       </div>
-      <div class="scenario-card blush" id="sc_vendor" onclick="startScenario('vendor')">
+      <div class="scenario-card blush" onclick="startScenario('vendor')">
         <span class="scenario-badge" style="background:rgba(196,99,122,0.12);color:#9B5FC0">Vendor</span>
         <div class="scenario-title">Negotiate a Vendor Contract</div>
         <div class="scenario-desc">You need better payment terms, a lower price, or both — without damaging the relationship.</div>
@@ -1851,296 +1851,5 @@ When responding:
     '<div onclick="doLogout()" style="margin-top:12px;font-size:0.72rem;color:rgba(237,214,248,0.35);cursor:pointer;text-align:center;letter-spacing:0.05em;" onmouseover="this.style.color=\'rgba(237,214,248,0.7)\'" onmouseout="this.style.color=\'rgba(237,214,248,0.35)\'">Sign out</div>'
   );
 </script>
-
-<!-- ══════════════════════════════════
-     AUTH OVERLAY
-══════════════════════════════════════ -->
-<div id="authOverlay" style="display:flex;position:fixed;inset:0;background:linear-gradient(135deg,#1E1030 0%,#2D1A50 50%,#1A0D30 100%);z-index:999;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
-
-  <!-- LOGIN -->
-  <div id="cardLogin" style="background:white;border-radius:24px;width:100%;max-width:450px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5);animation:slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);">
-    <div style="background:var(--deep);padding:36px 40px 28px;position:relative;overflow:hidden;">
-      <div style="position:absolute;right:16px;top:-18px;font-size:7rem;color:rgba(255,145,0,0.07);font-family:Georgia,serif;pointer-events:none;">&#10077;</div>
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.9rem;color:var(--gold-on-dark);">NegotiateHer</div>
-      <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(237,214,248,0.4);margin-top:3px;">Women Who Win</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-top:22px;">Welcome back &#10022;</div>
-      <div style="font-size:0.82rem;color:rgba(237,214,248,0.55);margin-top:4px;">Sign in to continue your journey</div>
-    </div>
-    <div style="padding:28px 40px 32px;">
-      <div style="margin-bottom:14px;">
-        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:6px;">Email or Username</label>
-        <input id="li_id" type="text" placeholder="you@email.com or @username" style="width:100%;padding:11px 14px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'" onkeydown="if(event.key==='Enter')doLogin()">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:6px;">Password</label>
-        <input id="li_pw" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" style="width:100%;padding:11px 14px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'" onkeydown="if(event.key==='Enter')doLogin()">
-      </div>
-      <div id="err_login" style="font-size:0.78rem;color:#B84070;min-height:20px;margin-bottom:10px;font-weight:500;"></div>
-      <button onclick="doLogin()" style="width:100%;background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;letter-spacing:0.02em;" onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">Sign In &rarr;</button>
-      <div style="text-align:center;margin-top:18px;font-size:0.82rem;color:var(--muted);">Don't have an account? <span onclick="switchCard('signup')" style="color:var(--gold);font-weight:600;cursor:pointer;">Create one free &rarr;</span></div>
-    </div>
-  </div>
-
-  <!-- SIGNUP -->
-  <div id="cardSignup" style="display:none;background:white;border-radius:24px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5);animation:slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);">
-    <div style="background:var(--deep);padding:32px 40px 24px;">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.9rem;color:var(--gold-on-dark);">NegotiateHer</div>
-      <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(237,214,248,0.4);margin-top:3px;">Women Who Win</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-top:20px;">Join the movement &#10022;</div>
-      <div style="font-size:0.82rem;color:rgba(237,214,248,0.55);margin-top:4px;">Create your free account &mdash; upgrade anytime</div>
-    </div>
-    <div style="padding:22px 40px 28px;">
-      <!-- Tier preview -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;">
-        <div style="border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid rgba(155,95,192,0.15);">
-          <div style="font-size:0.72rem;font-weight:700;color:var(--text);">Free</div>
-          <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">$0/mo</div>
-          <div style="font-size:0.6rem;color:var(--muted);margin-top:3px;">Browse + 2 sessions</div>
-        </div>
-        <div style="border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid var(--gold);background:rgba(155,95,192,0.04);">
-          <div style="font-size:0.72rem;font-weight:700;color:var(--gold);">Pro &#10022;</div>
-          <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">$12/mo</div>
-          <div style="font-size:0.6rem;color:var(--gold);margin-top:3px;">Unlimited access</div>
-        </div>
-        <div style="border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid rgba(255,145,0,0.3);">
-          <div style="font-size:0.72rem;font-weight:700;color:#FF9100;">Enterprise</div>
-          <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">Custom</div>
-          <div style="font-size:0.6rem;color:#FF9100;margin-top:3px;">Teams &amp; DEI</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-        <div>
-          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">First Name</label>
-          <input id="su_first" type="text" placeholder="Sarah" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
-        </div>
-        <div>
-          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Last Name</label>
-          <input id="su_last" type="text" placeholder="Chen" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
-        </div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Email Address</label>
-        <input id="su_email" type="email" placeholder="you@email.com" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-        <div>
-          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Zip Code</label>
-          <input id="su_zip" type="text" placeholder="33401" maxlength="5" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
-        </div>
-        <div>
-          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Username</label>
-          <input id="su_user" type="text" placeholder="@sarahwins" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
-        </div>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Password</label>
-        <input id="su_pw" type="password" placeholder="At least 6 characters" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'" onkeydown="if(event.key==='Enter')doSignup()">
-      </div>
-      <div id="err_signup" style="font-size:0.78rem;color:#B84070;min-height:20px;margin-bottom:10px;font-weight:500;"></div>
-      <button onclick="doSignup()" style="width:100%;background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;" onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">Create My Free Account &rarr;</button>
-      <div style="text-align:center;margin-top:14px;font-size:0.82rem;color:var(--muted);">Already have an account? <span onclick="switchCard('login')" style="color:var(--gold);font-weight:600;cursor:pointer;">Sign in &rarr;</span></div>
-      <div style="text-align:center;margin-top:8px;font-size:0.67rem;color:rgba(138,120,160,0.5);">By signing up you agree to our Terms of Service &amp; Privacy Policy</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- UPGRADE MODAL -->
-<div id="upgradeModal" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.92);z-index:998;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:white;border-radius:24px;width:100%;max-width:580px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5);">
-    <div style="background:var(--deep);padding:30px 36px 24px;position:relative;">
-      <button onclick="closeUpgrade()" style="position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(237,214,248,0.4);font-size:1.1rem;cursor:pointer;" onmouseover="this.style.color='rgba(237,214,248,0.8)'" onmouseout="this.style.color='rgba(237,214,248,0.4)'">&#10005;</button>
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.6rem;color:var(--gold-on-dark);">Unlock Your Potential &#10022;</div>
-      <div style="font-size:0.85rem;color:rgba(237,214,248,0.6);margin-top:6px;">Upgrade to <strong id="upgradeFeature" style="color:var(--gold-on-dark);"></strong> and much more.</div>
-    </div>
-    <div style="padding:28px 36px 32px;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
-        <!-- FREE -->
-        <div style="border:2px solid rgba(155,95,192,0.18);border-radius:14px;padding:18px 14px;text-align:center;">
-          <div style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;">Current Plan</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:3px;">Free</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:11px;">$0</div>
-          <div style="font-size:0.72rem;color:var(--muted);line-height:1.8;text-align:left;margin-bottom:12px;">&#10003; Browse all sections<br>&#10003; 2 Vera sessions/mo<br>&#10003; View community<br>&#10003; View tactics</div>
-          <div style="background:rgba(155,95,192,0.08);border-radius:7px;padding:8px;font-size:0.72rem;color:var(--muted);font-weight:600;">Your Current Plan</div>
-        </div>
-        <!-- PRO -->
-        <div style="border:2px solid var(--gold);border-radius:14px;padding:18px 14px;text-align:center;position:relative;box-shadow:0 4px 20px rgba(155,95,192,0.2);">
-          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--gold);color:white;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:3px 12px;border-radius:100px;font-weight:700;white-space:nowrap;">Most Popular</div>
-          <div style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;">Recommended</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:3px;">Pro</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:11px;">$12<span style="font-size:0.72rem;font-weight:400;color:var(--muted);">/mo</span></div>
-          <div style="font-size:0.72rem;color:var(--muted);line-height:1.8;text-align:left;margin-bottom:12px;">&#10003; Everything in Free<br>&#10003; Unlimited Vera sessions<br>&#10003; Full tactics library<br>&#10003; Post in community<br>&#10003; Share your wins<br>&#10003; Progress analytics</div>
-          <button onclick="upgradeTo('pro')" style="width:100%;background:var(--gold);color:white;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Upgrade to Pro &rarr;</button>
-        </div>
-        <!-- ENTERPRISE -->
-        <div style="border:2px solid rgba(255,145,0,0.3);border-radius:14px;padding:18px 14px;text-align:center;">
-          <div style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#FF9100;margin-bottom:7px;">For Teams</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:3px;">Enterprise</div>
-          <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:11px;">Custom</div>
-          <div style="font-size:0.72rem;color:var(--muted);line-height:1.8;text-align:left;margin-bottom:12px;">&#10003; Everything in Pro<br>&#10003; Team dashboards<br>&#10003; DEI reporting<br>&#10003; Custom scenarios<br>&#10003; Dedicated support<br>&#10003; ERG &amp; L&amp;D tools</div>
-          <button onclick="upgradeTo('enterprise')" style="width:100%;background:linear-gradient(135deg,#FF9100,#D07000);color:white;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Contact Sales &rarr;</button>
-        </div>
-      </div>
-      <div style="text-align:center;font-size:0.72rem;color:var(--muted);">Cancel anytime &middot; Secure payment &middot; 7-day free trial on Pro</div>
-    </div>
-  </div>
-</div>
-
-<style>
-@keyframes slideUp { from{opacity:0;transform:translateY(30px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
-</style>
-
-<script>
-// ── USER STORE ──
-let users = JSON.parse(localStorage.getItem('nh_users')||'[]');
-let me = JSON.parse(localStorage.getItem('nh_me')||'null');
-function saveUsers(){ localStorage.setItem('nh_users',JSON.stringify(users)); }
-function saveMe(u){ me=u; localStorage.setItem('nh_me',JSON.stringify(u)); }
-
-const TIERS = {
-  free:       {label:'◈ Free Member',     color:'#8A78A0', max:2},
-  pro:        {label:'✦ Pro Member',       color:'#9B5FC0', max:Infinity},
-  enterprise: {label:'★ Enterprise',       color:'#FF9100', max:Infinity}
-};
-
-function switchCard(m){
-  document.getElementById('cardLogin').style.display = m==='login'?'block':'none';
-  document.getElementById('cardSignup').style.display = m==='signup'?'block':'none';
-  document.getElementById('err_login').textContent='';
-  document.getElementById('err_signup').textContent='';
-}
-
-function doSignup(){
-  const first=document.getElementById('su_first').value.trim();
-  const last=document.getElementById('su_last').value.trim();
-  const email=document.getElementById('su_email').value.trim().toLowerCase();
-  const zip=document.getElementById('su_zip').value.trim();
-  const username=document.getElementById('su_user').value.trim().toLowerCase().replace('@','');
-  const pw=document.getElementById('su_pw').value;
-  const err=document.getElementById('err_signup');
-  if(!first||!last||!email||!zip||!username||!pw) return err.textContent='⚠ All fields are required.';
-  if(!/^\S+@\S+\.\S+$/.test(email)) return err.textContent='⚠ Please enter a valid email address.';
-  if(!/^\d{5}$/.test(zip)) return err.textContent='⚠ Please enter a valid 5-digit zip code.';
-  if(username.length<3) return err.textContent='⚠ Username must be at least 3 characters.';
-  if(pw.length<6) return err.textContent='⚠ Password must be at least 6 characters.';
-  if(users.find(u=>u.email===email)) return err.textContent='⚠ An account with this email already exists.';
-  if(users.find(u=>u.username===username)) return err.textContent='⚠ That username is taken. Try another!';
-  const u={first,last,email,zip,username,pw,tier:'free',joined:new Date().toISOString(),used:0};
-  users.push(u); saveUsers(); saveMe(u); launchApp();
-  showToast('Welcome to NegotiateHer, '+first+'! 🎉','Your journey to winning starts now.');
-}
-
-function doLogin(){
-  const id=document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
-  const pw=document.getElementById('li_pw').value;
-  const err=document.getElementById('err_login');
-  if(!id||!pw) return err.textContent='⚠ Please enter your email/username and password.';
-  const user=users.find(u=>(u.email===id||u.username===id)&&u.pw===pw);
-  if(!user) return err.textContent='⚠ Incorrect credentials. Please try again.';
-  saveMe(user); launchApp();
-  showToast('Welcome back, '+user.first+'! ✦','Ready to negotiate today?');
-}
-
-function doLogout(){
-  me=null; localStorage.removeItem('nh_me');
-  document.getElementById('authOverlay').style.display='flex';
-  document.querySelector('.sidebar').style.display='none';
-  document.querySelector('.main').style.display='none';
-  switchCard('login');
-}
-
-function launchApp(){
-  document.getElementById('authOverlay').style.display='none';
-  document.querySelector('.sidebar').style.display='flex';
-  document.querySelector('.main').style.display='block';
-  updateSidebar(); applyTierUI();
-}
-
-function updateSidebar(){
-  if(!me) return;
-  const t=TIERS[me.tier];
-  document.querySelector('.avatar').textContent=me.first[0].toUpperCase();
-  document.querySelector('.user-name').textContent=me.first+' '+me.last;
-  const tierEl=document.querySelector('.user-tier');
-  tierEl.textContent=t.label; tierEl.style.color=t.color;
-  const hr=new Date().getHours();
-  const g=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
-  const dg=document.getElementById('dashGreeting');
-  if(dg) dg.textContent=g+', '+me.first+' ✦';
-}
-
-function applyTierUI(){
-  if(!me) return;
-  const paid=me.tier==='pro'||me.tier==='enterprise';
-  // Scenario counter
-  const sc=document.querySelector('.scenario-meta');
-  const used=me.used||0; const left=Math.max(0,2-used);
-  // Lock scenarios 3+4 for free
-  const sc3=document.getElementById('sc_promo');
-  const sc4=document.getElementById('sc_vendor');
-  if(!paid){
-    if(sc3){sc3.style.opacity='0.5';sc3.style.cursor='default';sc3.onclick=()=>showUpgrade('unlock unlimited practice scenarios');}
-    if(sc4){sc4.style.opacity='0.5';sc4.style.cursor='default';sc4.onclick=()=>showUpgrade('unlock unlimited practice scenarios');}
-  }
-  // Add signout
-  if(!document.getElementById('signoutBtn')){
-    const sf=document.querySelector('.sidebar-footer');
-    if(sf){
-      const s=document.createElement('div');
-      s.id='signoutBtn';
-      s.onclick=doLogout;
-      s.style.cssText='margin-top:10px;font-size:0.7rem;color:rgba(237,214,248,0.3);cursor:pointer;text-align:center;letter-spacing:0.05em;';
-      s.textContent='Sign out';
-      s.onmouseover=()=>s.style.color='rgba(237,214,248,0.7)';
-      s.onmouseout=()=>s.style.color='rgba(237,214,248,0.3)';
-      sf.appendChild(s);
-    }
-  }
-}
-
-function showUpgrade(f){
-  document.getElementById('upgradeFeature').textContent=f;
-  const m=document.getElementById('upgradeModal');
-  m.style.display='flex';
-}
-
-function closeUpgrade(){
-  document.getElementById('upgradeModal').style.display='none';
-}
-
-function upgradeTo(tier){
-  if(!me) return;
-  const idx=users.findIndex(u=>u.email===me.email);
-  users[idx].tier=tier; saveUsers(); saveMe(users[idx]);
-  closeUpgrade(); updateSidebar(); applyTierUI();
-  showToast('You're now on '+tier.charAt(0).toUpperCase()+tier.slice(1)+'! ✦','All features unlocked. Go win!');
-}
-
-// Override gated actions
-const _origStartScenario=startScenario;
-startScenario=function(type){
-  if(!me) return;
-  const paid=me.tier==='pro'||me.tier==='enterprise';
-  if(!paid){
-    const used=me.used||0;
-    if(used>=2) return showUpgrade('unlock unlimited practice scenarios');
-    const idx=users.findIndex(u=>u.email===me.email);
-    users[idx].used=(used+1); saveUsers(); saveMe(users[idx]);
-  }
-  _origStartScenario(type);
-};
-
-const _origShowNewPost=showNewPost;
-showNewPost=function(){
-  if(!me) return;
-  if(me.tier==='free') return showUpgrade('post in the community');
-  showToast('Post editor coming soon!','Share your story with the community.');
-};
-
-// Boot
-if(me){ launchApp(); }
-else { document.getElementById('authOverlay').style.display='flex'; }
-</script>
-
 </body>
 </html>
