@@ -1760,7 +1760,9 @@ async function doLogin(){
   try {
     // Get ALL records and find match client-side (most reliable approach)
     const allRecords = await atFindAll();
-    const record = allRecords.find(r => {
+    // Filter out empty records first
+    const validRecords = allRecords.filter(r => r.fields && r.fields['Email']);
+    const record = validRecords.find(r => {
       const f = r.fields;
       const emailMatch = (f['Email']||'').toLowerCase().trim() === id;
       const userMatch  = (f['Username']||'').toLowerCase().trim() === id;
@@ -1768,7 +1770,7 @@ async function doLogin(){
     });
     if(!record){
       errEl.style.color='#B84070';
-      return errEl.textContent='⚠ No account found with that email or username.';
+      return errEl.textContent='⚠ No account found. Valid records: '+validRecords.length+' of '+allRecords.length;
     }
     const storedPw = (record.fields['Password']||'').trim();
     if(storedPw !== pw){
