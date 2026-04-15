@@ -1383,7 +1383,219 @@
 
 
 <!-- ── AUTH OVERLAY ── -->
+<div id="authOverlay" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.97);z-index:999;align-items:center;justify-content:center;padding:20px;">
 
+  <!-- LOGIN -->
+  <div id="authLogin" style="background:white;border-radius:20px;width:100%;max-width:440px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.4);">
+    <div style="background:var(--deep);padding:36px 40px 28px;">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.8rem;color:var(--gold-on-dark);margin-bottom:4px;">NegotiateHer</div>
+      <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(237,214,248,0.5);">Women Who Win</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-top:20px;">Welcome back ✦</div>
+      <div style="font-size:0.82rem;color:rgba(237,214,248,0.6);margin-top:4px;">Sign in to continue your journey</div>
+    </div>
+    <div style="padding:32px 40px;">
+      <div style="margin-bottom:16px;">
+        <label style="font-size:0.75rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:6px;">Email or Username</label>
+        <input id="li_email" type="text" placeholder="you@email.com or @username" style="width:100%;padding:11px 14px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;color:var(--text);transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div style="margin-bottom:8px;">
+        <label style="font-size:0.75rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:6px;">Password</label>
+        <input id="li_password" type="password" placeholder="••••••••" style="width:100%;padding:11px 14px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;color:var(--text);transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="err_login" style="font-size:0.78rem;color:#C4637A;min-height:20px;margin-bottom:8px;"></div>
+      <button onclick="doLogin()" style="width:100%;background:var(--gold);color:white;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Sign In →</button>
+      <div style="text-align:center;margin-top:20px;font-size:0.82rem;color:var(--muted);">Don't have an account? <span onclick="setAuthMode('signup')" style="color:var(--gold);font-weight:600;cursor:pointer;">Create one free →</span></div>
+    </div>
+  </div>
+
+  <!-- SIGN UP -->
+  <div id="authSignup" style="display:none;background:white;border-radius:20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.4);">
+    <div style="background:var(--deep);padding:36px 40px 28px;">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.8rem;color:var(--gold-on-dark);margin-bottom:4px;">NegotiateHer</div>
+      <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(237,214,248,0.5);">Women Who Win</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-top:20px;">Join the movement ✦</div>
+      <div style="font-size:0.82rem;color:rgba(237,214,248,0.6);margin-top:4px;">Create your free account in seconds</div>
+    </div>
+    <div style="padding:28px 40px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:0.72rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:5px;">First Name</label>
+          <input id="su_firstName" type="text" placeholder="Sarah" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:5px;">Last Name</label>
+          <input id="su_lastName" type="text" placeholder="Chen" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.72rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:5px;">Email Address</label>
+        <input id="su_email" type="email" placeholder="you@email.com" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:0.72rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:5px;">Zip Code</label>
+          <input id="su_zip" type="text" placeholder="33401" maxlength="5" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:5px;">Username</label>
+          <input id="su_username" type="text" placeholder="@sarahwins" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'">
+        </div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <label style="font-size:0.72rem;font-weight:600;color:var(--text);letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:5px;">Password</label>
+        <input id="su_password" type="password" placeholder="At least 6 characters" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.25)'" onkeydown="if(event.key==='Enter')doSignup()">
+      </div>
+      <div id="err_signup" style="font-size:0.78rem;color:#C4637A;min-height:20px;margin-bottom:8px;"></div>
+      <button onclick="doSignup()" style="width:100%;background:var(--gold);color:white;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Create My Free Account →</button>
+      <div style="text-align:center;margin-top:16px;font-size:0.78rem;color:var(--muted);">Already have an account? <span onclick="setAuthMode('login')" style="color:var(--gold);font-weight:600;cursor:pointer;">Sign in →</span></div>
+      <div style="text-align:center;margin-top:10px;font-size:0.7rem;color:rgba(138,120,160,0.6);">By signing up you agree to our Terms of Service & Privacy Policy</div>
+    </div>
+  </div>
+
+  <!-- UPGRADE PROMPT -->
+  <div id="authUpgrade" style="display:none;background:white;border-radius:20px;width:100%;max-width:560px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.4);">
+    <div style="background:var(--deep);padding:36px 40px 28px;position:relative;">
+      <button onclick="closeUpgrade()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(237,214,248,0.5);font-size:1.2rem;cursor:pointer;">✕</button>
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.8rem;color:var(--gold-on-dark);margin-bottom:4px;">Unlock Your Potential</div>
+      <div style="font-size:0.82rem;color:rgba(237,214,248,0.6);margin-top:8px;">Upgrade to <span id="upgradeFeatureName"></span> and more.</div>
+    </div>
+    <div style="padding:32px 40px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+
+        <!-- FREE -->
+        <div style="border:2px solid rgba(155,95,192,0.2);border-radius:14px;padding:20px;text-align:center;">
+          <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Current Plan</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:4px;">Free</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:12px;">$0</div>
+          <div style="font-size:0.75rem;color:var(--muted);line-height:1.7;">Browse all sections<br>2 practice scenarios/mo<br>View community<br>View tactics</div>
+          <div style="margin-top:14px;padding:8px;background:rgba(155,95,192,0.08);border-radius:8px;font-size:0.72rem;color:var(--muted);font-weight:600;">Your Current Plan</div>
+        </div>
+
+        <!-- PRO -->
+        <div style="border:2px solid var(--gold);border-radius:14px;padding:20px;text-align:center;position:relative;box-shadow:0 4px 20px rgba(155,95,192,0.2);">
+          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--gold);color:white;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:3px 12px;border-radius:100px;font-weight:700;">Most Popular</div>
+          <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Recommended</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:4px;">Pro</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:12px;">$12<span style="font-size:0.75rem;font-weight:400;color:var(--muted);">/mo</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);line-height:1.7;">Everything in Free<br>Unlimited Vera sessions<br>Full tactics library<br>Post in community<br>Share your wins<br>Progress analytics</div>
+          <button onclick="selectUpgradeTier('pro')" style="width:100%;margin-top:14px;background:var(--gold);color:white;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">Upgrade to Pro →</button>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div style="border:2px solid rgba(255,145,0,0.3);border-radius:14px;padding:20px;text-align:center;">
+          <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:#FF9100;margin-bottom:8px;">For Teams</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:4px;">Enterprise</div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:12px;">Custom</div>
+          <div style="font-size:0.75rem;color:var(--muted);line-height:1.7;">Everything in Pro<br>Team dashboards<br>DEI reporting<br>Custom scenarios<br>Dedicated support<br>ERG & L&D tools</div>
+          <button onclick="selectUpgradeTier('enterprise')" style="width:100%;margin-top:14px;background:linear-gradient(135deg,#FF9100,#E07800);color:white;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">Contact Sales →</button>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:0.75rem;color:var(--muted);">Cancel anytime · Secure payment · 7-day free trial on Pro</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LOGOUT BUTTON (added to sidebar footer) -->
+<script>
+  // Add logout link to sidebar footer
+  document.querySelector('.sidebar-footer').insertAdjacentHTML('beforeend',
+    '<div onclick="doLogout()" style="margin-top:12px;font-size:0.72rem;color:rgba(237,214,248,0.35);cursor:pointer;text-align:center;letter-spacing:0.05em;" onmouseover="this.style.color=\'rgba(237,214,248,0.7)\'" onmouseout="this.style.color=\'rgba(237,214,248,0.35)\'">Sign out</div>'
+  );
+</script>
+
+<!-- ══════════════════════════════════
+     AUTH OVERLAY
+══════════════════════════════════════ -->
+<div id="authOverlay" style="display:flex;position:fixed;inset:0;background:linear-gradient(135deg,#1E1030 0%,#2D1A50 50%,#1A0D30 100%);z-index:999;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+
+  <!-- LOGIN -->
+  <div id="cardLogin" style="background:white;border-radius:24px;width:100%;max-width:450px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5);animation:slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);">
+    <div style="background:var(--deep);padding:36px 40px 28px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:16px;top:-18px;font-size:7rem;color:rgba(255,145,0,0.07);font-family:Georgia,serif;pointer-events:none;">&#10077;</div>
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.9rem;color:var(--gold-on-dark);">NegotiateHer</div>
+      <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(237,214,248,0.4);margin-top:3px;">Women Who Win</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-top:22px;">Welcome back &#10022;</div>
+      <div style="font-size:0.82rem;color:rgba(237,214,248,0.55);margin-top:4px;">Sign in to continue your journey</div>
+    </div>
+    <div style="padding:28px 40px 32px;">
+      <div style="margin-bottom:14px;">
+        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:6px;">Email or Username</label>
+        <input id="li_id" type="text" placeholder="you@email.com or @username" style="width:100%;padding:11px 14px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:6px;">Password</label>
+        <input id="li_pw" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" style="width:100%;padding:11px 14px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="err_login" style="font-size:0.78rem;color:#B84070;min-height:20px;margin-bottom:10px;font-weight:500;"></div>
+      <button onclick="doLogin()" style="width:100%;background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;letter-spacing:0.02em;" onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">Sign In &rarr;</button>
+      <div style="text-align:center;margin-top:18px;font-size:0.82rem;color:var(--muted);">Don't have an account? <span onclick="switchCard('signup')" style="color:var(--gold);font-weight:600;cursor:pointer;">Create one free &rarr;</span></div>
+    </div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div id="cardSignup" style="display:none;background:white;border-radius:24px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5);animation:slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);">
+    <div style="background:var(--deep);padding:32px 40px 24px;">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.9rem;color:var(--gold-on-dark);">NegotiateHer</div>
+      <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(237,214,248,0.4);margin-top:3px;">Women Who Win</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-top:20px;">Join the movement &#10022;</div>
+      <div style="font-size:0.82rem;color:rgba(237,214,248,0.55);margin-top:4px;">Create your free account &mdash; upgrade anytime</div>
+    </div>
+    <div style="padding:22px 40px 28px;">
+      <!-- Tier preview -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;">
+        <div style="border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid rgba(155,95,192,0.15);">
+          <div style="font-size:0.72rem;font-weight:700;color:var(--text);">Free</div>
+          <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">$0/mo</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-top:3px;">Browse + 2 sessions</div>
+        </div>
+        <div style="border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid var(--gold);background:rgba(155,95,192,0.04);">
+          <div style="font-size:0.72rem;font-weight:700;color:var(--gold);">Pro &#10022;</div>
+          <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">$12/mo</div>
+          <div style="font-size:0.6rem;color:var(--gold);margin-top:3px;">Unlimited access</div>
+        </div>
+        <div style="border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid rgba(255,145,0,0.3);">
+          <div style="font-size:0.72rem;font-weight:700;color:#FF9100;">Enterprise</div>
+          <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">Custom</div>
+          <div style="font-size:0.6rem;color:#FF9100;margin-top:3px;">Teams &amp; DEI</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">First Name</label>
+          <input id="su_first" type="text" placeholder="Sarah" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+        </div>
+        <div>
+          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Last Name</label>
+          <input id="su_last" type="text" placeholder="Chen" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Email Address</label>
+        <input id="su_email" type="email" placeholder="you@email.com" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Zip Code</label>
+          <input id="su_zip" type="text" placeholder="33401" maxlength="5" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+        </div>
+        <div>
+          <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Username</label>
+          <input id="su_user" type="text" placeholder="@sarahwins" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+        </div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:0.7rem;font-weight:600;color:var(--text);letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Password</label>
+        <input id="su_pw" type="password" placeholder="At least 6 characters" style="width:100%;padding:10px 12px;border:1.5px solid rgba(155,95,192,0.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;color:var(--text);background:#FDFAFF;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'" onkeydown="if(event.key==='Enter')doSignup()">
+      </div>
+      <div id="err_signup" style="font-size:0.78rem;color:#B84070;min-height:20px;margin-bottom:10px;font-weight:500;"></div>
+      <button onclick="doSignup()" style="width:100%;background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;" onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">Create My Free Account &rarr;</button>
+      <div style="text-align:center;margin-top:14px;font-size:0.82rem;color:var(--muted);">Already have an account? <span onclick="switchCard('login')" style="color:var(--gold);font-weight:600;cursor:pointer;">Sign in &rarr;</span></div>
+      <div style="text-align:center;margin-top:8px;font-size:0.67rem;color:rgba(138,120,160,0.5);">By signing up you agree to our Terms of Service &amp; Privacy Policy</div>
+    </div>
+  </div>
+
+</div>
 
 <!-- UPGRADE MODAL -->
 <div id="upgradeModal" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.92);z-index:998;align-items:center;justify-content:center;padding:20px;">
@@ -1457,89 +1669,51 @@ async function doSignup(){
   const username=document.getElementById('su_user').value.trim().toLowerCase().replace('@','');
   const pw=document.getElementById('su_pw').value;
   const errEl=document.getElementById('err_signup');
-
   if(!first||!last||!email||!zip||!username||!pw) return errEl.textContent='⚠ All fields are required.';
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return errEl.textContent='⚠ Please enter a valid email address.';
-  if(!/^[0-9]{5}$/.test(zip)) return errEl.textContent='⚠ Please enter a valid 5-digit zip code.';
-  if(username.length<3) return errEl.textContent='⚠ Username must be at least 3 characters.';
-  if(pw.length<6) return errEl.textContent='⚠ Password must be at least 6 characters.';
-
   errEl.textContent='Creating your account...';
-  errEl.style.color='var(--sage)';
-
+  errEl.style.color='#7B5EA7';
   try {
-    // Check for existing email/username
-    const { data: existing } = await sb.from('nh_users')
-      .select('email,username')
-      .or('email.eq.'+email+',username.eq.'+username);
-
-    if(existing && existing.length > 0){
+    const { data:existing } = await sb.from('nh_users').select('email,username').or('email.eq.'+email+',username.eq.'+username);
+    if(existing && existing.length>0){
       errEl.style.color='#B84070';
-      if(existing.find(u=>u.email===email)) return errEl.textContent='⚠ An account with this email already exists.';
-      if(existing.find(u=>u.username===username)) return errEl.textContent='⚠ That username is taken. Try another!';
+      if(existing.find(u=>u.email===email)) return errEl.textContent='⚠ Email already registered.';
+      if(existing.find(u=>u.username===username)) return errEl.textContent='⚠ Username already taken.';
     }
-
     const { data, error } = await sb.from('nh_users').insert([{
       first_name:first, last_name:last, email, zip_code:zip,
       username, password_hash:pw, tier:'free', scenarios_used:0, is_admin:false
     }]).select().single();
-
-    if(error){
-      errEl.style.color='#B84070';
-      if(error.code==='23505'){
-        if(error.message.includes('email')) return errEl.textContent='⚠ Email already registered.';
-        if(error.message.includes('username')) return errEl.textContent='⚠ Username already taken.';
-      }
-      return errEl.textContent='⚠ Error: '+error.message;
-    }
-
+    if(error){ errEl.style.color='#B84070'; return errEl.textContent='⚠ '+error.message; }
     me=data;
     localStorage.setItem('nh_session', JSON.stringify({id:data.id}));
     launchApp();
     showToast('Welcome to NegotiateHer, '+first+'! 🎉','Your journey to winning starts now.');
-
-  } catch(e){
-    errEl.style.color='#B84070';
-    errEl.textContent='⚠ Connection error: '+e.message;
-  }
+  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Connection error: '+e.message; }
 }
 
 async function doLogin(){
   const id=document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
   const pw=document.getElementById('li_pw').value;
   const errEl=document.getElementById('err_login');
-
   if(!id||!pw) return errEl.textContent='⚠ Please enter your email/username and password.';
-
   errEl.textContent='Signing in...';
-  errEl.style.color='var(--sage)';
-
+  errEl.style.color='#7B5EA7';
   try {
     const { data, error } = await sb.from('nh_users')
       .select('*')
       .or('email.eq.'+id+',username.eq.'+id)
-      .eq('password_hash', pw)
+      .eq('password_hash',pw)
       .single();
-
-    if(error || !data){
-      errEl.style.color='#B84070';
-      return errEl.textContent='⚠ Incorrect email/username or password. Please try again.';
-    }
-
+    if(error||!data){ errEl.style.color='#B84070'; return errEl.textContent='⚠ Incorrect email/username or password.'; }
     me=data;
     localStorage.setItem('nh_session', JSON.stringify({id:data.id}));
     launchApp();
     showToast('Welcome back, '+data.first_name+'! ✦','Ready to negotiate today?');
-
-  } catch(e){
-    errEl.style.color='#B84070';
-    errEl.textContent='⚠ Connection error: '+e.message;
-  }
+  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Connection error: '+e.message; }
 }
 
 function doLogout(){
-  me=null;
-  localStorage.removeItem('nh_session');
+  me=null; localStorage.removeItem('nh_session');
   document.getElementById('authOverlay').style.display='flex';
   document.querySelector('.sidebar').style.display='none';
   document.querySelector('.main').style.display='none';
@@ -1550,8 +1724,7 @@ function launchApp(){
   document.getElementById('authOverlay').style.display='none';
   document.querySelector('.sidebar').style.display='flex';
   document.querySelector('.main').style.display='block';
-  updateSidebar();
-  applyTierUI();
+  updateSidebar(); applyTierUI();
 }
 
 function updateSidebar(){
@@ -1598,15 +1771,8 @@ function closeUpgrade(){ document.getElementById('upgradeModal').style.display='
 
 async function upgradeTo(tier){
   if(!me) return;
-  try {
-    const { data,error } = await sb.from('nh_users')
-      .update({tier, updated_at:new Date().toISOString()})
-      .eq('id',me.id).select().single();
-    if(!error&&data){
-      me=data; closeUpgrade(); updateSidebar(); applyTierUI();
-      showToast('You are now on '+tier.charAt(0).toUpperCase()+tier.slice(1)+'! ✦','All features unlocked. Go win!');
-    }
-  } catch(e){ showToast('Error upgrading. Please try again.',''); }
+  const { data,error } = await sb.from('nh_users').update({tier}).eq('id',me.id).select().single();
+  if(!error&&data){ me=data; closeUpgrade(); updateSidebar(); applyTierUI(); showToast('You are now on '+tier+'! ✦','All features unlocked.'); }
 }
 
 const _origStartScenario=startScenario;
@@ -1635,7 +1801,7 @@ async function bootApp(){
     try {
       const {id}=JSON.parse(saved);
       const { data,error } = await sb.from('nh_users').select('*').eq('id',id).single();
-      if(data && !error){ me=data; launchApp(); return; }
+      if(data&&!error){ me=data; launchApp(); return; }
     } catch(e){}
     localStorage.removeItem('nh_session');
   }
