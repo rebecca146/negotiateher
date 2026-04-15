@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NegotiateHer — Women Who Win</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 
@@ -1380,7 +1379,356 @@
   </div>
 </div>
 
+<script>
+  // ── NAVIGATION ──
+  function showPage(id, navEl) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (navEl) navEl.classList.add('active');
+  }
 
+  // ── LESSON OPEN ──
+  function openLesson(name) {
+    showToast('Opening: ' + name, 'Lesson loading...');
+  }
+
+  // ── UPVOTE ──
+  function upvote(btn) {
+    const countEl = btn.parentElement.querySelector('.vote-count');
+    countEl.textContent = parseInt(countEl.textContent) + 1;
+    btn.style.color = 'var(--gold)';
+    btn.style.borderColor = 'var(--gold)';
+    showToast('Upvoted! ✦', 'Thanks for supporting this post.');
+  }
+
+  // ── NEW POST ──
+  function showNewPost() {
+    showToast('New post editor coming soon!', 'Share your story with the community.');
+  }
+
+  // ── SCENARIO ──
+  const scenarios = {
+    salary: {
+      status: 'Salary Negotiation Role-Play Active',
+      intro: `Let's role-play your annual review. I'll be your manager.\n\nSetting: You've been at the company 2 years. You've led two major projects. Industry data shows you're underpaid by ~15%. Your manager opens the review.\n\n**Manager:** "We've had a great year, and your contributions have been recognized. We'd like to offer you a 3% merit increase."\n\nHow do you respond?`
+    },
+    freelance: {
+      status: 'Freelance Rate Role-Play Active',
+      intro: `I'll be your potential client. You've quoted $150/hour.\n\n**Client:** "We love your portfolio, but honestly $150/hour is really beyond our budget. We've worked with people overseas for $40/hour. Can you come down significantly?"\n\nWhat do you say?`
+    },
+    promotion: {
+      status: 'Promotion Conversation Role-Play Active',
+      intro: `You've been doing senior work without the title for 8 months. Time for the conversation. I'll be your manager.\n\n**Manager:** "You've been doing great work! What did you want to chat about?"\n\nMake your case.`
+    },
+    vendor: {
+      status: 'Vendor Negotiation Role-Play Active',
+      intro: `I'm a software vendor. You're renewing a $12k/year contract and want better terms.\n\n**Vendor:** "Happy to discuss renewal! Our standard rate is the same as last year — $12,000 annually."\n\nHow do you open the negotiation?`
+    }
+  };
+
+  function startScenario(type) {
+    const s = scenarios[type];
+    document.getElementById('chatStatus').textContent = s.status;
+    const msgs = document.getElementById('chatMessages');
+    msgs.innerHTML = '';
+    addMessage('ai', s.intro);
+    showToast('Scenario started!', 'Respond as you would in real life.');
+  }
+
+  function addMessage(type, text) {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg ' + type;
+    if (type === 'ai') {
+      div.innerHTML = `<div class="msg-label">Vera</div>${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}`;
+    } else {
+      div.innerHTML = `<div class="msg-label">You</div>${text}`;
+    }
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  const responses = [
+    "Strong opening! You established your value with data before making an ask — that's exactly right. One refinement: instead of saying 'I think I deserve,' try 'Based on my contributions and market research, I'm looking at X.' Removes the hedging. Want to try again with that adjustment?",
+    "Good instinct to push back rather than accept. Notice you held your ground — that's crucial. Now try adding a specific number. Vague asks get vague answers. What exact figure would you propose here?",
+    "Excellent use of questions! Asking 'what flexibility looks like' puts the burden back on them to solve the problem, not you to lower your price. This is advanced technique. How do you follow up if they say 'we genuinely have no more budget'?",
+    "You're doing well. One thing to watch: don't apologize or soften your ask with 'I'm sorry to ask, but...' Your request is professional and reasonable. Own it. Restate that last point without the hedge — go ahead.",
+    "Really solid! That silence after your number is strategic gold. In real life, the instinct is to fill it — resist that. The next response from them will often be better than their first offer. Keep going — how do you respond if they say 'let us think about it'?"
+  ];
+
+  let responseIdx = 0;
+
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    addMessage('user', text);
+    input.value = '';
+
+    // Show typing
+    const msgs = document.getElementById('chatMessages');
+    const typing = document.createElement('div');
+    typing.className = 'msg ai';
+    typing.id = 'typing';
+    typing.innerHTML = '<div class="msg-label">Vera</div><em style="opacity:0.5">Vera is thinking...</em>';
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          system: `You are Vera, an expert women's negotiation coach inside the NegotiateHer app. You are warm, direct, empowering, and deeply knowledgeable about negotiation tactics, workplace dynamics, and the specific challenges women face in negotiating.
+
+When responding:
+- Give specific, actionable feedback on what the user said
+- Point out what they did well AND what they could improve
+- Suggest specific phrasings they could use
+- Keep responses to 3-5 sentences — punchy and practical
+- Use encouraging but direct language
+- Reference real negotiation concepts (anchoring, BATNA, silence, bundling) when relevant
+- If they're role-playing, stay in the coaching role and give them a prompt to continue`,
+          messages: [{ role: "user", content: text }]
+        })
+      });
+      const data = await response.json();
+      const reply = data.content?.map(i => i.text || '').join('') || responses[responseIdx++ % responses.length];
+      document.getElementById('typing')?.remove();
+      addMessage('ai', reply);
+    } catch (e) {
+      document.getElementById('typing')?.remove();
+      addMessage('ai', responses[responseIdx++ % responses.length]);
+    }
+  }
+
+  // ── TOAST ──
+  function showToast(text, sub = 'Keep building your negotiation muscle.') {
+    const t = document.getElementById('toast');
+    document.getElementById('toastText').textContent = text;
+    document.getElementById('toastSub').textContent = sub;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── AUTH & TIER SYSTEM ──
+
+  // Tier definitions
+  const TIERS = {
+    free: {
+      name: 'Free',
+      price: '$0',
+      color: '#8A78A0',
+      badge: '◈ Free',
+      scenariosPerMonth: 2,
+      canPostCommunity: false,
+      canAccessTactics: false,
+      canAccessWinWall: false,
+      canAccessLearn: false,
+    },
+    pro: {
+      name: 'Pro',
+      price: '$12/mo',
+      color: '#9B5FC0',
+      badge: '✦ Pro',
+      scenariosPerMonth: Infinity,
+      canPostCommunity: true,
+      canAccessTactics: true,
+      canAccessWinWall: true,
+      canAccessLearn: true,
+    },
+    enterprise: {
+      name: 'Enterprise',
+      price: 'Custom',
+      color: '#FF9100',
+      badge: '★ Enterprise',
+      scenariosPerMonth: Infinity,
+      canPostCommunity: true,
+      canAccessTactics: true,
+      canAccessWinWall: true,
+      canAccessLearn: true,
+    }
+  };
+
+  // Simple in-memory user store (in production this would be a real database)
+  let users = JSON.parse(localStorage.getItem('nh_users') || '[]');
+  let currentUser = JSON.parse(localStorage.getItem('nh_current_user') || 'null');
+
+  function saveUsers() { localStorage.setItem('nh_users', JSON.stringify(users)); }
+  function saveCurrentUser(u) { currentUser = u; localStorage.setItem('nh_current_user', JSON.stringify(u)); }
+
+  // ── BOOT: show auth or app ──
+  function boot() {
+    if (currentUser) {
+      showApp();
+    } else {
+      showAuthScreen('login');
+    }
+  }
+
+  function showAuthScreen(mode) {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.querySelector('.sidebar').style.display = 'none';
+    document.querySelector('.main').style.display = 'none';
+    setAuthMode(mode);
+  }
+
+  function showApp() {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.querySelector('.sidebar').style.display = 'flex';
+    document.querySelector('.main').style.display = 'block';
+    updateUserUI();
+  }
+
+  function updateUserUI() {
+    if (!currentUser) return;
+    const tier = TIERS[currentUser.tier];
+    document.querySelector('.user-name').textContent = currentUser.firstName + ' ' + currentUser.lastName;
+    document.querySelector('.user-tier').textContent = tier.badge;
+    document.querySelector('.avatar').textContent = currentUser.firstName[0].toUpperCase();
+  }
+
+  function setAuthMode(mode) {
+    document.getElementById('authLogin').style.display = mode === 'login' ? 'block' : 'none';
+    document.getElementById('authSignup').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('authUpgrade').style.display = 'none';
+    clearAuthErrors();
+  }
+
+  function clearAuthErrors() {
+    document.querySelectorAll('.auth-error').forEach(e => e.textContent = '');
+  }
+
+  // ── SIGN UP ──
+  function doSignup() {
+    clearAuthErrors();
+    const firstName = document.getElementById('su_firstName').value.trim();
+    const lastName = document.getElementById('su_lastName').value.trim();
+    const email = document.getElementById('su_email').value.trim().toLowerCase();
+    const zip = document.getElementById('su_zip').value.trim();
+    const username = document.getElementById('su_username').value.trim().toLowerCase();
+    const password = document.getElementById('su_password').value;
+
+    if (!firstName || !lastName || !email || !zip || !username || !password) {
+      return showAuthError('signup', 'All fields are required.');
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      return showAuthError('signup', 'Please enter a valid email address.');
+    }
+    if (!/^\d{5}$/.test(zip)) {
+      return showAuthError('signup', 'Please enter a valid 5-digit zip code.');
+    }
+    if (username.length < 3) {
+      return showAuthError('signup', 'Username must be at least 3 characters.');
+    }
+    if (password.length < 6) {
+      return showAuthError('signup', 'Password must be at least 6 characters.');
+    }
+    if (users.find(u => u.email === email)) {
+      return showAuthError('signup', 'An account with this email already exists.');
+    }
+    if (users.find(u => u.username === username)) {
+      return showAuthError('signup', 'That username is already taken. Try another!');
+    }
+
+    const newUser = { firstName, lastName, email, zip, username, password, tier: 'free', joined: new Date().toISOString(), scenariosUsed: 0 };
+    users.push(newUser);
+    saveUsers();
+    saveCurrentUser(newUser);
+    showApp();
+    showToast('Welcome to NegotiateHer, ' + firstName + '! 🎉', 'Your journey to winning starts now.');
+  }
+
+  // ── LOG IN ──
+  function doLogin() {
+    clearAuthErrors();
+    const identifier = document.getElementById('li_email').value.trim().toLowerCase();
+    const password = document.getElementById('li_password').value;
+
+    if (!identifier || !password) {
+      return showAuthError('login', 'Please enter your email/username and password.');
+    }
+    const user = users.find(u => (u.email === identifier || u.username === identifier) && u.password === password);
+    if (!user) {
+      return showAuthError('login', 'Incorrect email/username or password. Please try again.');
+    }
+    saveCurrentUser(user);
+    showApp();
+    showToast('Welcome back, ' + user.firstName + '! ✦', 'Ready to negotiate today?');
+  }
+
+  // ── LOG OUT ──
+  function doLogout() {
+    currentUser = null;
+    localStorage.removeItem('nh_current_user');
+    showAuthScreen('login');
+  }
+
+  function showAuthError(form, msg) {
+    document.getElementById('err_' + form).textContent = msg;
+  }
+
+  // ── TIER GATING ──
+  function checkAccess(feature) {
+    if (!currentUser) return false;
+    const tier = TIERS[currentUser.tier];
+    if (feature === 'community_post' && !tier.canPostCommunity) { showUpgradePrompt('post in the community'); return false; }
+    if (feature === 'tactics' && !tier.canAccessTactics) { showUpgradePrompt('access the full Tactics library'); return false; }
+    if (feature === 'winwall_post' && !tier.canAccessWinWall) { showUpgradePrompt('share your wins'); return false; }
+    if (feature === 'learn' && !tier.canAccessLearn) { showUpgradePrompt('access all lessons'); return false; }
+    if (feature === 'scenario') {
+      if (currentUser.tier === 'free' && currentUser.scenariosUsed >= TIERS.free.scenariosPerMonth) {
+        showUpgradePrompt('unlock unlimited practice scenarios'); return false;
+      }
+    }
+    return true;
+  }
+
+  function showUpgradePrompt(featureName) {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('authLogin').style.display = 'none';
+    document.getElementById('authSignup').style.display = 'none';
+    document.getElementById('upgradeFeatureName').textContent = featureName;
+    document.getElementById('authUpgrade').style.display = 'block';
+  }
+
+  function closeUpgrade() {
+    document.getElementById('authOverlay').style.display = 'none';
+  }
+
+  function selectUpgradeTier(tier) {
+    // In production this would go to a payment processor
+    if (!currentUser) return;
+    const idx = users.findIndex(u => u.email === currentUser.email);
+    users[idx].tier = tier;
+    saveUsers();
+    saveCurrentUser(users[idx]);
+    closeUpgrade();
+    updateUserUI();
+    showToast('You\'re now on ' + TIERS[tier].name + '! ✦', 'All ' + TIERS[tier].name + ' features are now unlocked.');
+  }
+
+  // ── OVERRIDE GATED ACTIONS ──
+  const _origStartScenario = startScenario;
+  startScenario = function(type) {
+    if (!checkAccess('scenario')) return;
+    if (currentUser) { currentUser.scenariosUsed = (currentUser.scenariosUsed || 0) + 1; saveCurrentUser(currentUser); }
+    _origStartScenario(type);
+  };
+
+  const _origShowNewPost = showNewPost;
+  showNewPost = function() {
+    if (!checkAccess('community_post')) return;
+    showToast('New post editor coming soon!', 'Share your story with the community.');
+  };
+
+  // Boot the app
+  boot();
+</script>
 
 <!-- ── AUTH OVERLAY ── -->
 <div id="authOverlay" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.97);z-index:999;align-items:center;justify-content:center;padding:20px;">
@@ -1643,18 +1991,16 @@
 </style>
 
 <script>
-// ══════════════════════════════════
-// SUPABASE CONNECTION
-// ══════════════════════════════════
-const SUPA_URL = 'https://wtamfpidwoyalqgxcklh.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0YW1mcGlkd295YWxxZ3hja2xoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjg4NDQsImV4cCI6MjA5MTg0NDg0NH0.msidcmKTTOzQb7IojKCfZLwyCTs2-SGEhBDH4tFbg5A';
-const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
-let me = null;
+// ── USER STORE ──
+let users = JSON.parse(localStorage.getItem('nh_users')||'[]');
+let me = JSON.parse(localStorage.getItem('nh_me')||'null');
+function saveUsers(){ localStorage.setItem('nh_users',JSON.stringify(users)); }
+function saveMe(u){ me=u; localStorage.setItem('nh_me',JSON.stringify(u)); }
 
 const TIERS = {
-  free:       {label:'◈ Free Member', color:'#8A78A0'},
-  pro:        {label:'✦ Pro Member',   color:'#9B5FC0'},
-  enterprise: {label:'★ Enterprise',   color:'#FF9100'}
+  free:       {label:'◈ Free Member',     color:'#8A78A0', max:2},
+  pro:        {label:'✦ Pro Member',       color:'#9B5FC0', max:Infinity},
+  enterprise: {label:'★ Enterprise',       color:'#FF9100', max:Infinity}
 };
 
 function switchCard(m){
@@ -1664,56 +2010,39 @@ function switchCard(m){
   document.getElementById('err_signup').textContent='';
 }
 
-async function doSignup(){
+function doSignup(){
   const first=document.getElementById('su_first').value.trim();
   const last=document.getElementById('su_last').value.trim();
   const email=document.getElementById('su_email').value.trim().toLowerCase();
   const zip=document.getElementById('su_zip').value.trim();
   const username=document.getElementById('su_user').value.trim().toLowerCase().replace('@','');
   const pw=document.getElementById('su_pw').value;
-  const errEl=document.getElementById('err_signup');
-  if(!first||!last||!email||!zip||!username||!pw) return errEl.textContent='⚠ All fields are required.';
-  if(!/^[^@]+@[^@]+[.][^@]+$/.test(email)) return errEl.textContent='⚠ Please enter a valid email address.';
-  if(!/^[0-9]{5}$/.test(zip)) return errEl.textContent='⚠ Please enter a valid 5-digit zip code.';
-  if(username.length<3) return errEl.textContent='⚠ Username must be at least 3 characters.';
-  if(pw.length<6) return errEl.textContent='⚠ Password must be at least 6 characters.';
-  errEl.textContent='Creating your account...';
-  try {
-    const { data:existing } = await sb.from('nh_users').select('email,username').or('email.eq.'+email+',username.eq.'+username);
-    if(existing && existing.length>0){
-      if(existing[0].email===email) return errEl.textContent='⚠ An account with this email already exists.';
-      if(existing[0].username===username) return errEl.textContent='⚠ That username is taken. Try another!';
-    }
-    const { data, error } = await sb.from('nh_users').insert([{
-      first_name:first, last_name:last, email, zip_code:zip,
-      username, password_hash:pw, tier:'free', scenarios_used:0, is_admin:false
-    }]).select().single();
-    if(error) return errEl.textContent='⚠ Error: '+error.message;
-    me=data;
-    localStorage.setItem('nh_session', JSON.stringify({id:data.id}));
-    launchApp();
-    showToast('Welcome to NegotiateHer, '+first+'! 🎉','Your journey to winning starts now.');
-  } catch(e){ errEl.textContent='⚠ Connection error. Please try again.'; }
+  const err=document.getElementById('err_signup');
+  if(!first||!last||!email||!zip||!username||!pw) return err.textContent='⚠ All fields are required.';
+  if(!/^\S+@\S+\.\S+$/.test(email)) return err.textContent='⚠ Please enter a valid email address.';
+  if(!/^\d{5}$/.test(zip)) return err.textContent='⚠ Please enter a valid 5-digit zip code.';
+  if(username.length<3) return err.textContent='⚠ Username must be at least 3 characters.';
+  if(pw.length<6) return err.textContent='⚠ Password must be at least 6 characters.';
+  if(users.find(u=>u.email===email)) return err.textContent='⚠ An account with this email already exists.';
+  if(users.find(u=>u.username===username)) return err.textContent='⚠ That username is taken. Try another!';
+  const u={first,last,email,zip,username,pw,tier:'free',joined:new Date().toISOString(),used:0};
+  users.push(u); saveUsers(); saveMe(u); launchApp();
+  showToast('Welcome to NegotiateHer, '+first+'! 🎉','Your journey to winning starts now.');
 }
 
-async function doLogin(){
+function doLogin(){
   const id=document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
   const pw=document.getElementById('li_pw').value;
-  const errEl=document.getElementById('err_login');
-  if(!id||!pw) return errEl.textContent='⚠ Please enter your email/username and password.';
-  errEl.textContent='Signing in...';
-  try {
-    const { data, error } = await sb.from('nh_users').select('*').or('email.eq.'+id+',username.eq.'+id).eq('password_hash',pw).single();
-    if(error||!data) return errEl.textContent='⚠ Incorrect credentials. Please try again.';
-    me=data;
-    localStorage.setItem('nh_session', JSON.stringify({id:data.id}));
-    launchApp();
-    showToast('Welcome back, '+data.first_name+'! ✦','Ready to negotiate today?');
-  } catch(e){ errEl.textContent='⚠ Connection error. Please try again.'; }
+  const err=document.getElementById('err_login');
+  if(!id||!pw) return err.textContent='⚠ Please enter your email/username and password.';
+  const user=users.find(u=>(u.email===id||u.username===id)&&u.pw===pw);
+  if(!user) return err.textContent='⚠ Incorrect credentials. Please try again.';
+  saveMe(user); launchApp();
+  showToast('Welcome back, '+user.first+'! ✦','Ready to negotiate today?');
 }
 
 function doLogout(){
-  me=null; localStorage.removeItem('nh_session');
+  me=null; localStorage.removeItem('nh_me');
   document.getElementById('authOverlay').style.display='flex';
   document.querySelector('.sidebar').style.display='none';
   document.querySelector('.main').style.display='none';
@@ -1729,21 +2058,38 @@ function launchApp(){
 
 function updateSidebar(){
   if(!me) return;
-  const t=TIERS[me.tier]||TIERS.free;
-  document.querySelector('.avatar').textContent=me.first_name[0].toUpperCase();
-  document.querySelector('.user-name').textContent=me.first_name+' '+me.last_name;
+  const t=TIERS[me.tier];
+  document.querySelector('.avatar').textContent=me.first[0].toUpperCase();
+  document.querySelector('.user-name').textContent=me.first+' '+me.last;
   const tierEl=document.querySelector('.user-tier');
   tierEl.textContent=t.label; tierEl.style.color=t.color;
   const hr=new Date().getHours();
   const g=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   const dg=document.getElementById('dashGreeting');
-  if(dg) dg.textContent=g+', '+me.first_name+' ✦';
+  if(dg) dg.textContent=g+', '+me.first+' ✦';
+}
+
+function applyTierUI(){
+  if(!me) return;
+  const paid=me.tier==='pro'||me.tier==='enterprise';
+  // Scenario counter
+  const sc=document.querySelector('.scenario-meta');
+  const used=me.used||0; const left=Math.max(0,2-used);
+  // Lock scenarios 3+4 for free
+  const sc3=document.getElementById('sc_promo');
+  const sc4=document.getElementById('sc_vendor');
+  if(!paid){
+    if(sc3){sc3.style.opacity='0.5';sc3.style.cursor='default';sc3.onclick=()=>showUpgrade('unlock unlimited practice scenarios');}
+    if(sc4){sc4.style.opacity='0.5';sc4.style.cursor='default';sc4.onclick=()=>showUpgrade('unlock unlimited practice scenarios');}
+  }
+  // Add signout
   if(!document.getElementById('signoutBtn')){
     const sf=document.querySelector('.sidebar-footer');
     if(sf){
       const s=document.createElement('div');
-      s.id='signoutBtn'; s.onclick=doLogout;
-      s.style.cssText='margin-top:10px;font-size:0.7rem;color:rgba(237,214,248,0.3);cursor:pointer;text-align:center;';
+      s.id='signoutBtn';
+      s.onclick=doLogout;
+      s.style.cssText='margin-top:10px;font-size:0.7rem;color:rgba(237,214,248,0.3);cursor:pointer;text-align:center;letter-spacing:0.05em;';
       s.textContent='Sign out';
       s.onmouseover=()=>s.style.color='rgba(237,214,248,0.7)';
       s.onmouseout=()=>s.style.color='rgba(237,214,248,0.3)';
@@ -1752,38 +2098,34 @@ function updateSidebar(){
   }
 }
 
-function applyTierUI(){
-  if(!me) return;
-  const paid=me.tier==='pro'||me.tier==='enterprise';
-  const sc3=document.getElementById('sc_promo');
-  const sc4=document.getElementById('sc_vendor');
-  if(!paid){
-    if(sc3){sc3.style.opacity='0.5';sc3.style.cursor='default';sc3.onclick=()=>showUpgrade('unlock unlimited practice scenarios');}
-    if(sc4){sc4.style.opacity='0.5';sc4.style.cursor='default';sc4.onclick=()=>showUpgrade('unlock unlimited practice scenarios');}
-  }
-}
-
 function showUpgrade(f){
   document.getElementById('upgradeFeature').textContent=f;
-  document.getElementById('upgradeModal').style.display='flex';
+  const m=document.getElementById('upgradeModal');
+  m.style.display='flex';
 }
-function closeUpgrade(){ document.getElementById('upgradeModal').style.display='none'; }
 
-async function upgradeTo(tier){
+function closeUpgrade(){
+  document.getElementById('upgradeModal').style.display='none';
+}
+
+function upgradeTo(tier){
   if(!me) return;
-  const { data,error } = await sb.from('nh_users').update({tier,updated_at:new Date().toISOString()}).eq('id',me.id).select().single();
-  if(!error&&data){ me=data; closeUpgrade(); updateSidebar(); applyTierUI(); showToast('You are now on '+tier+' ✦','All features unlocked. Go win!'); }
+  const idx=users.findIndex(u=>u.email===me.email);
+  users[idx].tier=tier; saveUsers(); saveMe(users[idx]);
+  closeUpgrade(); updateSidebar(); applyTierUI();
+  showToast('You're now on '+tier.charAt(0).toUpperCase()+tier.slice(1)+'! ✦','All features unlocked. Go win!');
 }
 
+// Override gated actions
 const _origStartScenario=startScenario;
-startScenario=async function(type){
+startScenario=function(type){
   if(!me) return;
   const paid=me.tier==='pro'||me.tier==='enterprise';
   if(!paid){
-    const used=me.scenarios_used||0;
+    const used=me.used||0;
     if(used>=2) return showUpgrade('unlock unlimited practice scenarios');
-    await sb.from('nh_users').update({scenarios_used:used+1}).eq('id',me.id);
-    me.scenarios_used=used+1;
+    const idx=users.findIndex(u=>u.email===me.email);
+    users[idx].used=(used+1); saveUsers(); saveMe(users[idx]);
   }
   _origStartScenario(type);
 };
@@ -1795,19 +2137,9 @@ showNewPost=function(){
   showToast('Post editor coming soon!','Share your story with the community.');
 };
 
-async function bootApp(){
-  const saved=localStorage.getItem('nh_session');
-  if(saved){
-    try {
-      const {id}=JSON.parse(saved);
-      const { data } = await sb.from('nh_users').select('*').eq('id',id).single();
-      if(data){ me=data; launchApp(); return; }
-    } catch(e){}
-    localStorage.removeItem('nh_session');
-  }
-  document.getElementById('authOverlay').style.display='flex';
-}
-bootApp();
+// Boot
+if(me){ launchApp(); }
+else { document.getElementById('authOverlay').style.display='flex'; }
 </script>
 
 </body>
