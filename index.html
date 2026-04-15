@@ -1675,9 +1675,16 @@ const TIERS = {
 async function atFind(formula){
   const url = AT_URL + '?filterByFormula=' + encodeURIComponent(formula) + '&maxRecords=1';
   const r = await fetch(url, {headers: AT_HEADS});
-  if(!r.ok) throw new Error('Airtable ' + r.status + ': Check your token has base access');
   const d = await r.json();
+  if(d.error) throw new Error('Airtable error: ' + d.error);
   return d.records && d.records.length > 0 ? d.records[0] : null;
+}
+
+async function atFindAll(){
+  const url = AT_URL + '?maxRecords=100';
+  const r = await fetch(url, {headers: AT_HEADS});
+  const d = await r.json();
+  return d.records || [];
 }
 
 async function atCreate(fields){
@@ -1746,22 +1753,25 @@ async function doSignup(){
 
 async function doLogin(){
   const id=document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
-  const pw=document.getElementById('li_pw').value;
+  const pw=document.getElementById('li_pw').value.trim();
   const errEl=document.getElementById('err_login');
   if(!id||!pw) return errEl.textContent='⚠ Please enter your email/username and password.';
   errEl.style.color='#7B5EA7'; errEl.textContent='Signing in...';
   try {
-    // Search by email OR username using SEARCH() which is more reliable
-    const byEmail = await atFind('LOWER(Email)="'+id+'"');
-    const record = byEmail || await atFind('LOWER(Username)="'+id+'"');
+    // Get ALL records and find match client-side (most reliable approach)
+    const allRecords = await atFindAll();
+    const record = allRecords.find(r => {
+      const f = r.fields;
+      const emailMatch = (f['Email']||'').toLowerCase().trim() === id;
+      const userMatch  = (f['Username']||'').toLowerCase().trim() === id;
+      return emailMatch || userMatch;
+    });
     if(!record){
       errEl.style.color='#B84070';
       return errEl.textContent='⚠ No account found with that email or username.';
     }
-    // Compare password (trim to handle any accidental spaces)
     const storedPw = (record.fields['Password']||'').trim();
-    const enteredPw = pw.trim();
-    if(storedPw !== enteredPw){
+    if(storedPw !== pw){
       errEl.style.color='#B84070';
       return errEl.textContent='⚠ Incorrect password. Please try again.';
     }
