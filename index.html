@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NegotiateHer — Women Who Win</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 
@@ -1643,9 +1642,15 @@
 </style>
 
 <script>
-const SUPA_URL = 'https://wtamfpidwoyalqgxcklh.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0YW1mcGlkd295YWxxZ3hja2xoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjg4NDQsImV4cCI6MjA5MTg0NDg0NH0.msidcmKTTOzQb7IojKCfZLwyCTs2-SGEhBDH4tFbg5A';
-const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+// ══════════════════════════════════
+// AIRTABLE CONNECTION
+// ══════════════════════════════════
+const AT_TOKEN = 'pat2FT2gzNUBSzlKt.e1b0768860cbee87f67b59cf0633dae89eb75b925af42f0f23766b84232250ff';
+const AT_BASE  = 'appfp4v9kpc0LjZaF';
+const AT_TABLE = 'tbl49LOZiJ5oCrvtr';
+const AT_URL   = 'https://api.airtable.com/v0/' + AT_BASE + '/' + AT_TABLE;
+const AT_HEADS = { 'Authorization': 'Bearer ' + AT_TOKEN, 'Content-Type': 'application/json' };
+
 let me = null;
 
 const TIERS = {
@@ -1653,6 +1658,36 @@ const TIERS = {
   pro:        {label:'✦ Pro Member',   color:'#9B5FC0'},
   enterprise: {label:'★ Enterprise',   color:'#FF9100'}
 };
+
+async function atFind(formula){
+  const url = AT_URL + '?filterByFormula=' + encodeURIComponent(formula) + '&maxRecords=1';
+  const r = await fetch(url, {headers: AT_HEADS});
+  const d = await r.json();
+  return d.records && d.records.length > 0 ? d.records[0] : null;
+}
+
+async function atCreate(fields){
+  const r = await fetch(AT_URL, {
+    method: 'POST', headers: AT_HEADS,
+    body: JSON.stringify({records:[{fields}]})
+  });
+  const d = await r.json();
+  return d.records ? d.records[0] : null;
+}
+
+async function atUpdate(recordId, fields){
+  const r = await fetch(AT_URL + '/' + recordId, {
+    method: 'PATCH', headers: AT_HEADS,
+    body: JSON.stringify({fields})
+  });
+  return await r.json();
+}
+
+async function atList(){
+  const r = await fetch(AT_URL + '?maxRecords=100', {headers: AT_HEADS});
+  const d = await r.json();
+  return d.records || [];
+}
 
 function switchCard(m){
   document.getElementById('cardLogin').style.display = m==='login'?'block':'none';
@@ -1662,65 +1697,66 @@ function switchCard(m){
 }
 
 async function doSignup(){
-  const first=document.getElementById('su_first').value.trim();
-  const last=document.getElementById('su_last').value.trim();
-  const email=document.getElementById('su_email').value.trim().toLowerCase();
-  const zip=document.getElementById('su_zip').value.trim();
-  const username=document.getElementById('su_user').value.trim().toLowerCase().replace('@','');
-  const pw=document.getElementById('su_pw').value;
-  const errEl=document.getElementById('err_signup');
+  const first    = document.getElementById('su_first').value.trim();
+  const last     = document.getElementById('su_last').value.trim();
+  const email    = document.getElementById('su_email').value.trim().toLowerCase();
+  const zip      = document.getElementById('su_zip').value.trim();
+  const username = document.getElementById('su_user').value.trim().toLowerCase().replace('@','');
+  const pw       = document.getElementById('su_pw').value;
+  const errEl    = document.getElementById('err_signup');
+
   if(!first||!last||!email||!zip||!username||!pw) return errEl.textContent='⚠ All fields are required.';
-  errEl.textContent='Creating your account...';
+  if(zip.length!==5) return errEl.textContent='⚠ Please enter a valid 5-digit zip code.';
+  if(username.length<3) return errEl.textContent='⚠ Username must be at least 3 characters.';
+  if(pw.length<6) return errEl.textContent='⚠ Password must be at least 6 characters.';
+
   errEl.style.color='#7B5EA7';
+  errEl.textContent='Creating your account...';
+
   try {
-    const { data:existing } = await sb.from('nh_users').select('email,username').or('email.eq.'+email+',username.eq.'+username);
-    if(existing && existing.length>0){
+    const existing = await atFind('OR(Email="'+email+'", Username="'+username+'")');
+    if(existing){
       errEl.style.color='#B84070';
-      if(existing.find(u=>u.email===email)) return errEl.textContent='⚠ Email already registered.';
-      if(existing.find(u=>u.username===username)) return errEl.textContent='⚠ Username already taken.';
+      if(existing.fields['Email']===email) return errEl.textContent='⚠ Email already registered.';
+      return errEl.textContent='⚠ Username already taken. Try another!';
     }
-    const { data, error } = await sb.from('nh_users').insert([{
-      first_name:first, last_name:last, email, zip_code:zip,
-      username, password_hash:pw, tier:'free', scenarios_used:0, is_admin:false
-    }]).select().single();
-    if(error){ errEl.style.color='#B84070'; return errEl.textContent='⚠ '+error.message; }
-    me=data;
-    localStorage.setItem('nh_session', JSON.stringify({id:data.id}));
+    const record = await atCreate({
+      'Email':email, 'Password':pw, 'First Name':first,
+      'Last Name':last, 'Username':username, 'Zip Code':zip,
+      'Tier':'free', 'Is Admin':false
+    });
+    if(!record){ errEl.style.color='#B84070'; return errEl.textContent='⚠ Error creating account. Please try again.'; }
+    me = {id:record.id, ...record.fields};
+    localStorage.setItem('nh_session', JSON.stringify({id:record.id}));
     launchApp();
     showToast('Welcome to NegotiateHer, '+first+'! 🎉','Your journey to winning starts now.');
-  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Connection error: '+e.message; }
+  } catch(e){
+    errEl.style.color='#B84070';
+    errEl.textContent='⚠ Connection error: '+e.message;
+  }
 }
 
 async function doLogin(){
-  const id=document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
-  const pw=document.getElementById('li_pw').value;
-  const errEl=document.getElementById('err_login');
+  const id    = document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
+  const pw    = document.getElementById('li_pw').value;
+  const errEl = document.getElementById('err_login');
+
   if(!id||!pw) return errEl.textContent='⚠ Please enter your email/username and password.';
-  errEl.textContent='Signing in...';
   errEl.style.color='#7B5EA7';
+  errEl.textContent='Signing in...';
+
   try {
-    // First find user by email or username
-    const { data:users, error:findErr } = await sb.from('nh_users')
-      .select('*')
-      .or('email.eq.'+id+',username.eq.'+id);
-    
-    if(findErr||!users||users.length===0){
-      errEl.style.color='#B84070';
-      return errEl.textContent='⚠ No account found with that email or username.';
-    }
-    
-    // Then check password matches
-    const user = users.find(u => u.password_hash === pw);
-    if(!user){
-      errEl.style.color='#B84070';
-      return errEl.textContent='⚠ Incorrect password. Please try again.';
-    }
-    
-    me=user;
-    localStorage.setItem('nh_session', JSON.stringify({id:user.id}));
+    const record = await atFind('OR(Email="'+id+'", Username="'+id+'")');
+    if(!record){ errEl.style.color='#B84070'; return errEl.textContent='⚠ No account found. Please check your email or username.'; }
+    if(record.fields['Password'] !== pw){ errEl.style.color='#B84070'; return errEl.textContent='⚠ Incorrect password. Please try again.'; }
+    me = {id:record.id, ...record.fields};
+    localStorage.setItem('nh_session', JSON.stringify({id:record.id}));
     launchApp();
-    showToast('Welcome back, '+user.first_name+'! ✦','Ready to negotiate today?');
-  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Connection error: '+e.message; }
+    showToast('Welcome back, '+record.fields['First Name']+'! ✦','Ready to negotiate today?');
+  } catch(e){
+    errEl.style.color='#B84070';
+    errEl.textContent='⚠ Connection error: '+e.message;
+  }
 }
 
 function doLogout(){
@@ -1740,15 +1776,18 @@ function launchApp(){
 
 function updateSidebar(){
   if(!me) return;
-  const t=TIERS[me.tier]||TIERS.free;
-  document.querySelector('.avatar').textContent=me.first_name[0].toUpperCase();
-  document.querySelector('.user-name').textContent=me.first_name+' '+me.last_name;
-  const tierEl=document.querySelector('.user-tier');
+  const tier = me['Tier']||'free';
+  const t = TIERS[tier]||TIERS.free;
+  const firstName = me['First Name']||'';
+  const lastName  = me['Last Name']||'';
+  document.querySelector('.avatar').textContent = firstName[0]?firstName[0].toUpperCase():'?';
+  document.querySelector('.user-name').textContent = firstName+' '+lastName;
+  const tierEl = document.querySelector('.user-tier');
   tierEl.textContent=t.label; tierEl.style.color=t.color;
   const hr=new Date().getHours();
   const g=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   const dg=document.getElementById('dashGreeting');
-  if(dg) dg.textContent=g+', '+me.first_name+' ✦';
+  if(dg) dg.textContent=g+', '+firstName+' ✦';
   if(!document.getElementById('signoutBtn')){
     const sf=document.querySelector('.sidebar-footer');
     if(sf){
@@ -1765,7 +1804,7 @@ function updateSidebar(){
 
 function applyTierUI(){
   if(!me) return;
-  const paid=me.tier==='pro'||me.tier==='enterprise';
+  const paid=(me['Tier']||'free')==='pro'||(me['Tier']||'free')==='enterprise';
   const sc3=document.getElementById('sc_promo');
   const sc4=document.getElementById('sc_vendor');
   if(!paid){
@@ -1782,37 +1821,44 @@ function closeUpgrade(){ document.getElementById('upgradeModal').style.display='
 
 async function upgradeTo(tier){
   if(!me) return;
-  const { data,error } = await sb.from('nh_users').update({tier}).eq('id',me.id).select().single();
-  if(!error&&data){ me=data; closeUpgrade(); updateSidebar(); applyTierUI(); showToast('You are now on '+tier+'! ✦','All features unlocked.'); }
+  await atUpdate(me.id,{'Tier':tier});
+  me['Tier']=tier; closeUpgrade(); updateSidebar(); applyTierUI();
+  showToast('You are now on '+tier.charAt(0).toUpperCase()+tier.slice(1)+'! ✦','All features unlocked. Go win!');
 }
 
-const _origStartScenario=startScenario;
-startScenario=async function(type){
-  if(!me) return;
-  const paid=me.tier==='pro'||me.tier==='enterprise';
-  if(!paid){
-    const used=me.scenarios_used||0;
-    if(used>=2) return showUpgrade('unlock unlimited practice scenarios');
-    await sb.from('nh_users').update({scenarios_used:used+1}).eq('id',me.id);
-    me.scenarios_used=used+1;
-  }
-  _origStartScenario(type);
-};
+// Override gated actions AFTER main script has defined them
+window.addEventListener('load', function(){
+  const _orig = startScenario;
+  startScenario = async function(type){
+    if(!me) return;
+    const paid=(me['Tier']||'free')==='pro'||(me['Tier']||'free')==='enterprise';
+    if(!paid){
+      const used=parseInt(me['Scenarios Used']||0);
+      if(used>=2) return showUpgrade('unlock unlimited practice scenarios');
+      await atUpdate(me.id,{'Scenarios Used':used+1});
+      me['Scenarios Used']=used+1;
+    }
+    _orig(type);
+  };
 
-const _origShowNewPost=showNewPost;
-showNewPost=function(){
-  if(!me) return;
-  if(me.tier==='free') return showUpgrade('post in the community');
-  showToast('Post editor coming soon!','Share your story with the community.');
-};
+  const _origPost = showNewPost;
+  showNewPost = function(){
+    if(!me) return;
+    if((me['Tier']||'free')==='free') return showUpgrade('post in the community');
+    showToast('Post editor coming soon!','Share your story with the community.');
+  };
+});
 
 async function bootApp(){
   const saved=localStorage.getItem('nh_session');
   if(saved){
     try {
       const {id}=JSON.parse(saved);
-      const { data,error } = await sb.from('nh_users').select('*').eq('id',id).single();
-      if(data&&!error){ me=data; launchApp(); return; }
+      const r=await fetch(AT_URL+'/'+id,{headers:AT_HEADS});
+      if(r.ok){
+        const data=await r.json();
+        if(data&&data.fields){ me={id:data.id,...data.fields}; launchApp(); return; }
+      }
     } catch(e){}
     localStorage.removeItem('nh_session');
   }
