@@ -1752,7 +1752,8 @@ async function doSignup(){
 }
 
 async function doLogin(){
-  const id  = document.getElementById('li_id').value.trim().toLowerCase().replace('@','');
+  const rawId = document.getElementById('li_id').value.trim().toLowerCase();
+  const id = rawId.startsWith('@') ? rawId.slice(1) : rawId;
   const pw  = document.getElementById('li_pw').value.trim();
   const errEl = document.getElementById('err_login');
   if(!id||!pw) return errEl.textContent='⚠ Please enter your email/username and password.';
