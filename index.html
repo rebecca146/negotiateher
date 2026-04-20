@@ -833,9 +833,258 @@
   .success-toast .toast-icon { font-size: 1.3rem; }
   .success-toast .toast-text { font-size: 0.82rem; color: var(--cream); font-weight: 500; }
   .success-toast .toast-sub { font-size: 0.72rem; color: var(--muted); }
+
+  /* ─── MOBILE RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none !important;
+    }
+
+    .main {
+      margin-left: 0 !important;
+    }
+
+    /* Mobile top nav bar */
+    .mobile-nav {
+      display: flex !important;
+    }
+
+    .page {
+      padding: 20px 16px 100px !important;
+    }
+
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .page-header h2 {
+      font-size: 1.6rem !important;
+    }
+
+    .welcome-banner {
+      grid-template-columns: 1fr !important;
+      padding: 24px !important;
+    }
+
+    .welcome-banner::after { display: none; }
+
+    .streak-badge { display: none; }
+
+    .stats-row {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+    }
+
+    .two-col {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+    .skills-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 12px !important;
+    }
+
+    .scenario-grid {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+
+    .tactics-grid {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+
+    .wins-grid {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+
+    .tip-hero {
+      grid-template-columns: 1fr !important;
+      padding: 24px !important;
+    }
+
+    .tip-badge { display: none; }
+
+    .thread-card {
+      grid-template-columns: auto 1fr !important;
+      gap: 10px !important;
+    }
+
+    .thread-stats { display: none; }
+
+    .chat-panel {
+      height: 360px !important;
+    }
+
+    /* Auth cards mobile */
+    .auth-card, .auth-card.wide {
+      max-width: 100% !important;
+      border-radius: 16px !important;
+    }
+
+    .auth-hdr {
+      padding: 24px 24px 18px !important;
+    }
+
+    .auth-body {
+      padding: 18px 24px 24px !important;
+    }
+
+    .field-row {
+      grid-template-columns: 1fr !important;
+    }
+
+    .plans-grid {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+
+    .upgrade-card {
+      max-width: 100% !important;
+    }
+
+    .upgrade-hdr {
+      padding: 20px 20px 16px !important;
+    }
+  }
+
+  /* Mobile bottom navigation bar */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--deep);
+    border-top: 1px solid rgba(255,145,0,0.2);
+    z-index: 200;
+    padding: 8px 0 12px;
+  }
+
+  .mobile-nav-items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 10px;
+    transition: background 0.2s;
+    min-width: 56px;
+  }
+
+  .mobile-nav-item:hover, .mobile-nav-item.active {
+    background: rgba(255,145,0,0.1);
+  }
+
+  .mobile-nav-item .micon {
+    font-size: 1.2rem;
+    color: rgba(237,214,248,0.5);
+  }
+
+  .mobile-nav-item.active .micon {
+    color: var(--gold-on-dark);
+  }
+
+  .mobile-nav-item .mlabel {
+    font-size: 0.6rem;
+    color: rgba(237,214,248,0.4);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .mobile-nav-item.active .mlabel {
+    color: var(--gold-on-dark);
+  }
+
+  /* Mobile header bar */
+  .mobile-header {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--deep);
+    border-bottom: 1px solid rgba(255,145,0,0.2);
+    z-index: 200;
+    padding: 12px 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-header { display: flex; }
+    .page { padding-top: 72px !important; }
+  }
+
+  .mobile-header-logo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--gold-on-dark);
+  }
+
+  .mobile-header-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--sage));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem; color: white; font-weight: 700;
+  }
+
 </style>
 </head>
 <body>
+
+<!-- MOBILE HEADER -->
+<div class="mobile-header" id="mobileHeader" style="display:none;">
+  <div class="mobile-header-logo">NegotiateHer</div>
+  <div class="mobile-header-user">
+    <div class="mobile-avatar" id="mobileAvatar">?</div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav" id="mobileNav" style="display:none;">
+  <div class="mobile-nav-items">
+    <div class="mobile-nav-item active" onclick="mobileGoPage('dashboard',this)">
+      <span class="micon">◈</span>
+      <span class="mlabel">Home</span>
+    </div>
+    <div class="mobile-nav-item" onclick="mobileGoPage('learn',this)">
+      <span class="micon">◎</span>
+      <span class="mlabel">Learn</span>
+    </div>
+    <div class="mobile-nav-item" onclick="mobileGoPage('practice',this)">
+      <span class="micon">⟐</span>
+      <span class="mlabel">Practice</span>
+    </div>
+    <div class="mobile-nav-item" onclick="mobileGoPage('community',this)">
+      <span class="micon">❋</span>
+      <span class="mlabel">Community</span>
+    </div>
+    <div class="mobile-nav-item" onclick="mobileGoPage('wins',this)">
+      <span class="micon">★</span>
+      <span class="mlabel">Wins</span>
+    </div>
+  </div>
+</div>
+
 
 <!-- SIDEBAR -->
 <nav class="sidebar">
@@ -1762,9 +2011,6 @@ async function doLogin(){
   try {
     const allRecords = await atFindAll();
     const validRecords = allRecords.filter(r => r.fields && r.fields['Email']);
-    console.log('DEBUG login - id searching for:', id);
-    console.log('DEBUG login - valid records:', validRecords.length);
-    validRecords.forEach(r => console.log('  checking:', (r.fields['Email']||'').toLowerCase().trim(), '===', id, '?', (r.fields['Email']||'').toLowerCase().trim() === id));
     const record = validRecords.find(r => {
       const emailMatch = (r.fields['Email']||'').toLowerCase().trim() === id;
       const userMatch  = (r.fields['Username']||'').toLowerCase().trim() === id;
@@ -1805,7 +2051,7 @@ function launchApp(){
   document.getElementById('authOverlay').style.display='none';
   document.querySelector('.sidebar').style.display='flex';
   document.querySelector('.main').style.display='block';
-  updateSidebar(); applyTierUI();
+  updateSidebar(); applyTierUI(); showMobileUI();
 }
 
 function updateSidebar(){
@@ -1879,6 +2125,28 @@ showNewPost = function(){
   if((me['Tier']||'free')==='free') return showUpgrade('post in the community');
   showToast('Post editor coming soon!','Share your story with the community.');
 };
+
+
+// ── MOBILE NAVIGATION ──
+function mobileGoPage(id, navEl) {
+  goPage(id, null);
+  document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+}
+
+function showMobileUI() {
+  if(window.innerWidth <= 768) {
+    const mh = document.getElementById('mobileHeader');
+    const mn = document.getElementById('mobileNav');
+    if(mh) mh.style.display = 'flex';
+    if(mn) mn.style.display = 'block';
+    // Update mobile avatar
+    if(me) {
+      const ma = document.getElementById('mobileAvatar');
+      if(ma) ma.textContent = (me['First Name']||'?')[0].toUpperCase();
+    }
+  }
+}
 
 async function bootApp(){
   const saved=localStorage.getItem('nh_session');
