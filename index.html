@@ -2131,8 +2131,16 @@ async function atPostCreate(fields){
   const d = await r.json(); return d.records?d.records[0]:null;
 }
 async function atPostList(){
-  const r = await fetch(AT_POSTS_URL+'?sort%5B0%5D%5Bfield%5D=Is+Pinned&sort%5B0%5D%5Bdirection%5D=desc&sort%5B1%5D%5Bfield%5D=Created&sort%5B1%5D%5Bdirection%5D=desc&maxRecords=50',{headers:AT_HEADS});
-  const d = await r.json(); return d.records||[];
+  const r = await fetch(AT_POSTS_URL+'?maxRecords=50',{headers:AT_HEADS});
+  const d = await r.json();
+  const records = d.records||[];
+  // Sort pinned first, then by created date descending
+  records.sort((a,b)=>{
+    if(a.fields['Is Pinned'] && !b.fields['Is Pinned']) return -1;
+    if(!a.fields['Is Pinned'] && b.fields['Is Pinned']) return 1;
+    return new Date(b.fields['Created']||0) - new Date(a.fields['Created']||0);
+  });
+  return records;
 }
 async function atPostLike(id, current){
   await fetch(AT_POSTS_URL+'/'+id,{method:'PATCH',headers:AT_HEADS,body:JSON.stringify({fields:{'Likes':(current||0)+1}})});
@@ -2155,8 +2163,15 @@ async function atWinCreate(fields){
   const d = await r.json(); return d.records?d.records[0]:null;
 }
 async function atWinList(){
-  const r = await fetch(AT_WINS_URL+'?sort%5B0%5D%5Bfield%5D=Is+Featured&sort%5B0%5D%5Bdirection%5D=desc&sort%5B1%5D%5Bfield%5D=Likes&sort%5B1%5D%5Bdirection%5D=desc&maxRecords=50',{headers:AT_HEADS});
-  const d = await r.json(); return d.records||[];
+  const r = await fetch(AT_WINS_URL+'?maxRecords=50',{headers:AT_HEADS});
+  const d = await r.json();
+  const records = d.records||[];
+  records.sort((a,b)=>{
+    if(a.fields['Is Featured'] && !b.fields['Is Featured']) return -1;
+    if(!a.fields['Is Featured'] && b.fields['Is Featured']) return 1;
+    return (b.fields['Likes']||0) - (a.fields['Likes']||0);
+  });
+  return records;
 }
 async function atWinLike(id, current){
   await fetch(AT_WINS_URL+'/'+id,{method:'PATCH',headers:AT_HEADS,body:JSON.stringify({fields:{'Likes':(current||0)+1}})});
