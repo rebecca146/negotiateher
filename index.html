@@ -1447,175 +1447,137 @@
   <!-- ── COMMUNITY ── -->
   <div class="page" id="page-community">
     <div class="page-header">
-      <div>
-        <h2>The Circle</h2>
-        <p>A community of 12,400+ women negotiating their way forward.</p>
-      </div>
-      <button class="btn btn-primary" onclick="showNewPost()">+ New Post</button>
+      <div><h2>The Circle</h2><p>A community of women negotiating their way forward.</p></div>
+      <button class="btn btn-primary" onclick="openNewPost()">+ New Post</button>
     </div>
 
-    <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
-      <button class="btn btn-primary" style="font-size:0.75rem;padding:8px 16px">All Posts</button>
-      <button class="btn btn-outline" style="font-size:0.75rem;padding:8px 16px">Salary 💰</button>
-      <button class="btn btn-outline" style="font-size:0.75rem;padding:8px 16px">Wins 🏆</button>
-      <button class="btn btn-outline" style="font-size:0.75rem;padding:8px 16px">Advice 💬</button>
-      <button class="btn btn-outline" style="font-size:0.75rem;padding:8px 16px">Freelance ✍️</button>
-      <button class="btn btn-outline" style="font-size:0.75rem;padding:8px 16px">Questions ❓</button>
+    <!-- NEW POST MODAL -->
+    <div id="newPostModal" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.92);z-index:998;align-items:center;justify-content:center;padding:20px;">
+      <div style="background:white;border-radius:20px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.4);">
+        <div style="background:var(--deep);padding:24px 30px 18px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold-on-dark);">Share with The Circle</div>
+          <button onclick="closeNewPost()" style="background:none;border:none;color:rgba(237,214,248,0.4);font-size:1.1rem;cursor:pointer;">✕</button>
+        </div>
+        <div style="padding:24px 30px 28px;">
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Title</label>
+            <input id="postTitle" type="text" placeholder="What do you want to discuss?" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Category</label>
+            <select id="postCategory" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);background:white;box-sizing:border-box;">
+              <option value="Salary">💰 Salary</option>
+              <option value="Advice">💬 Advice</option>
+              <option value="Real Talk">🔥 Real Talk</option>
+              <option value="Freelance">✍️ Freelance</option>
+              <option value="Resources">📚 Resources</option>
+              <option value="Weekly Challenge">🏆 Weekly Challenge</option>
+              <option value="Wins">⭐ Wins</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Your Post</label>
+            <textarea id="postBody" placeholder="Share your experience, question, or advice..." rows="5" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'"></textarea>
+          </div>
+          <div id="postErr" style="font-size:0.78rem;color:#B84070;min-height:18px;margin-bottom:8px;"></div>
+          <button onclick="submitPost()" style="width:100%;background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Post to The Circle →</button>
+        </div>
+      </div>
     </div>
 
-    <div class="threads-list">
-      <div class="thread-card" onclick="showToast('Opening thread...')">
-        <div class="thread-vote">
-          <button class="vote-btn" onclick="event.stopPropagation();upvote(this)">▲</button>
-          <span class="vote-count">142</span>
-          <button class="vote-btn" onclick="event.stopPropagation()">▼</button>
+    <!-- REPLY MODAL -->
+    <div id="replyModal" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.92);z-index:998;align-items:center;justify-content:center;padding:20px;">
+      <div style="background:white;border-radius:20px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.4);">
+        <div style="background:var(--deep);padding:22px 28px 16px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold-on-dark);">Reply to Thread</div>
+          <button onclick="closeReply()" style="background:none;border:none;color:rgba(237,214,248,0.4);font-size:1.1rem;cursor:pointer;">✕</button>
         </div>
-        <div>
-          <div class="thread-title">I got a 34% raise. Here's exactly what I said.</div>
-          <div class="thread-preview">I know that sounds unbelievable, but three months of using this community's techniques changed everything. I want to share the full script I used so you can adapt it...</div>
-          <div class="thread-tags">
-            <span class="tag">Win</span>
-            <span class="tag">Salary</span>
-            <span class="tag">Script</span>
+        <div style="padding:22px 28px 26px;">
+          <div id="replyPostTitle" style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--deep);margin-bottom:14px;padding:10px 14px;background:rgba(155,95,192,0.06);border-radius:8px;border-left:3px solid var(--gold);"></div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Your Reply</label>
+            <textarea id="replyBody" placeholder="Share your thoughts or advice..." rows="4" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'"></textarea>
           </div>
-        </div>
-        <div class="thread-stats">
-          <strong>89 replies</strong>
-          2 hours ago
+          <div id="replyErr" style="font-size:0.78rem;color:#B84070;min-height:18px;margin-bottom:8px;"></div>
+          <button onclick="submitReply()" style="width:100%;background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Post Reply →</button>
         </div>
       </div>
+    </div>
 
-      <div class="thread-card" onclick="showToast('Opening thread...')">
-        <div class="thread-vote">
-          <button class="vote-btn" onclick="event.stopPropagation();upvote(this)">▲</button>
-          <span class="vote-count">67</span>
-          <button class="vote-btn" onclick="event.stopPropagation()">▼</button>
-        </div>
-        <div>
-          <div class="thread-title">My manager said "that's just not how we do things here." What do I say back?</div>
-          <div class="thread-preview">I asked for a flexible start time (8:30 instead of 8:00, same hours total) and got this response. I don't want to rock the boat but also feel like this is reasonable...</div>
-          <div class="thread-tags">
-            <span class="tag">Advice</span>
-            <span class="tag">Workplace</span>
-          </div>
-        </div>
-        <div class="thread-stats">
-          <strong>34 replies</strong>
-          5 hours ago
-        </div>
-      </div>
+    <!-- CATEGORY FILTERS -->
+    <div style="display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;" id="catFilters">
+      <button class="btn btn-primary" style="font-size:0.71rem;padding:7px 13px" onclick="filterPosts('all',this)">All Posts</button>
+      <button class="btn btn-outline" style="font-size:0.71rem;padding:7px 13px" onclick="filterPosts('Salary',this)">💰 Salary</button>
+      <button class="btn btn-outline" style="font-size:0.71rem;padding:7px 13px" onclick="filterPosts('Wins',this)">🏆 Wins</button>
+      <button class="btn btn-outline" style="font-size:0.71rem;padding:7px 13px" onclick="filterPosts('Advice',this)">💬 Advice</button>
+      <button class="btn btn-outline" style="font-size:0.71rem;padding:7px 13px" onclick="filterPosts('Freelance',this)">✍️ Freelance</button>
+      <button class="btn btn-outline" style="font-size:0.71rem;padding:7px 13px" onclick="filterPosts('Real Talk',this)">🔥 Real Talk</button>
+    </div>
 
-      <div class="thread-card" onclick="showToast('Opening thread...')">
-        <div class="thread-vote">
-          <button class="vote-btn" onclick="event.stopPropagation();upvote(this)">▲</button>
-          <span class="vote-count">53</span>
-          <button class="vote-btn" onclick="event.stopPropagation()">▼</button>
-        </div>
-        <div>
-          <div class="thread-title">Weekly Thread: Share your "small win" negotiations this week 🙌</div>
-          <div class="thread-preview">It doesn't have to be a salary negotiation. Did you ask for an extension? Push back on a scope creep request? Get a discount on software? All wins count here...</div>
-          <div class="thread-tags">
-            <span class="tag">Weekly</span>
-            <span class="tag">Community</span>
-          </div>
-        </div>
-        <div class="thread-stats">
-          <strong>128 replies</strong>
-          1 day ago
-        </div>
-      </div>
-
-      <div class="thread-card" onclick="showToast('Opening thread...')">
-        <div class="thread-vote">
-          <button class="vote-btn" onclick="event.stopPropagation();upvote(this)">▲</button>
-          <span class="vote-count">41</span>
-          <button class="vote-btn" onclick="event.stopPropagation()">▼</button>
-        </div>
-        <div>
-          <div class="thread-title">Dealing with the "aggressive woman" perception — how do you handle it?</div>
-          <div class="thread-preview">I've been told I come across as "too direct" when negotiating even though my male colleagues say the same things without pushback. Has anyone found reframings that work?</div>
-          <div class="thread-tags">
-            <span class="tag">Real Talk</span>
-            <span class="tag">Bias</span>
-          </div>
-        </div>
-        <div class="thread-stats">
-          <strong>62 replies</strong>
-          2 days ago
-        </div>
-      </div>
-
-      <div class="thread-card" onclick="showToast('Opening thread...')">
-        <div class="thread-vote">
-          <button class="vote-btn" onclick="event.stopPropagation();upvote(this)">▲</button>
-          <span class="vote-count">29</span>
-          <button class="vote-btn" onclick="event.stopPropagation()">▼</button>
-        </div>
-        <div>
-          <div class="thread-title">Resources: Best books, podcasts, and courses on negotiation for women</div>
-          <div class="thread-preview">Compiling the best resources the community has shared. This is a living list — comment below to add yours! Starting with "Ask For It" by Linda Babcock...</div>
-          <div class="thread-tags">
-            <span class="tag">Resources</span>
-            <span class="tag">Learning</span>
-          </div>
-        </div>
-        <div class="thread-stats">
-          <strong>47 replies</strong>
-          3 days ago
-        </div>
-      </div>
+    <!-- POSTS LIST -->
+    <div id="postsList" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="text-align:center;padding:40px;color:var(--muted);">Loading posts...</div>
     </div>
   </div>
 
   <!-- ── WIN WALL ── -->
   <div class="page" id="page-wins">
     <div class="page-header">
-      <div>
-        <h2>Win Wall ★</h2>
-        <p>Celebrating every victory — big and small.</p>
-      </div>
-      <button class="btn btn-primary" onclick="showToast('Share your win with the community!')">Share Your Win →</button>
+      <div><h2>Win Wall ★</h2><p>Celebrating every victory — big and small.</p></div>
+      <button class="btn btn-primary" onclick="openNewWin()">+ Share Your Win</button>
     </div>
 
-    <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px;">
-      <div class="tactic-card" style="border-left:4px solid var(--gold)">
-        <div style="font-size:1.4rem;margin-bottom:10px">💰</div>
-        <div class="tactic-title" style="font-size:0.95rem">Maya R. — +$22,000</div>
-        <div class="tactic-desc">"Used the high anchor method. They countered at $18k and I held at $22k. We met in the middle at exactly $22k because they rounded up. Don't. Budge."</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:10px">3 days ago · 🏆 Featured</div>
-      </div>
-      <div class="tactic-card" style="border-left:4px solid var(--sage)">
-        <div style="font-size:1.4rem;margin-bottom:10px">⏰</div>
-        <div class="tactic-title" style="font-size:0.95rem">Leena M. — Flexible Hours</div>
-        <div class="tactic-desc">"Negotiated a 4-day week without a pay cut. Prepared data on my output vs. the team average. Let the numbers speak."</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:10px">1 week ago · ❤️ 234 likes</div>
-      </div>
-      <div class="tactic-card" style="border-left:4px solid var(--rust)">
-        <div style="font-size:1.4rem;margin-bottom:10px">📋</div>
-        <div class="tactic-title" style="font-size:0.95rem">Priya K. — Contract Win</div>
-        <div class="tactic-desc">"Got net-30 changed to net-15, added a kill fee clause, and bumped my rate 20% on a 6-month project. Took 2 email exchanges."</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:10px">1 week ago · ❤️ 178 likes</div>
-      </div>
-      <div class="tactic-card" style="border-left:4px solid #C99EE0">
-        <div style="font-size:1.4rem;margin-bottom:10px">🎓</div>
-        <div class="tactic-title" style="font-size:0.95rem">Tara N. — Tuition Reimbursement</div>
-        <div class="tactic-desc">"Asked HR about the tuition policy on my first week. Turned out there was $5,250/year available. Three years later, that's an MBA."</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:10px">2 weeks ago · ❤️ 312 likes</div>
-      </div>
-      <div class="tactic-card" style="border-left:4px solid #9B5FC0">
-        <div style="font-size:1.4rem;margin-bottom:10px">🏠</div>
-        <div class="tactic-title" style="font-size:0.95rem">Diana F. — Remote Work</div>
-        <div class="tactic-desc">"Negotiated fully remote after 3 months hybrid. Prepared a productivity report. They said yes in 10 minutes."</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:10px">2 weeks ago · ❤️ 156 likes</div>
-      </div>
-      <div class="tactic-card" style="border-left:4px solid var(--gold-light)">
-        <div style="font-size:1.4rem;margin-bottom:10px">✈️</div>
-        <div class="tactic-title" style="font-size:0.95rem">Chloe R. — Extra PTO</div>
-        <div class="tactic-desc">"Couldn't move on salary but negotiated 5 extra PTO days. At my hourly rate, that's $2,800 in value. Everything is negotiable."</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:10px">3 weeks ago · ❤️ 204 likes</div>
+    <!-- NEW WIN MODAL -->
+    <div id="newWinModal" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.92);z-index:998;align-items:center;justify-content:center;padding:20px;">
+      <div style="background:white;border-radius:20px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.4);">
+        <div style="background:var(--deep);padding:24px 30px 18px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold-on-dark);">Share Your Win ★</div>
+            <div style="font-size:0.78rem;color:rgba(237,214,248,0.5);margin-top:3px;">Inspire other women with your story</div>
+          </div>
+          <button onclick="closeNewWin()" style="background:none;border:none;color:rgba(237,214,248,0.4);font-size:1.1rem;cursor:pointer;">✕</button>
+        </div>
+        <div style="padding:24px 30px 28px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+            <div>
+              <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Win Type</label>
+              <select id="winType" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);background:white;box-sizing:border-box;">
+                <option value="Salary">💰 Salary Increase</option>
+                <option value="Promotion">🚀 Promotion</option>
+                <option value="Remote Work">🏠 Remote Work</option>
+                <option value="Flexibility">⏰ Flexibility</option>
+                <option value="PTO">✈️ PTO / Time Off</option>
+                <option value="Contract">📋 Contract Win</option>
+                <option value="Benefits">🎓 Benefits</option>
+                <option value="Other">⭐ Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Amount / Result</label>
+              <input id="winAmount" type="text" placeholder="e.g. +$15,000 or 5 PTO days" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+            </div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Company <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+            <input id="winCompany" type="text" placeholder="Company name or 'Confidential'" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.7rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:5px;">Your Tip for Other Women</label>
+            <textarea id="winTip" placeholder="What worked for you? What would you tell other women in the same situation?" rows="4" style="width:100%;padding:10px 13px;border:1.5px solid rgba(155,95,192,0.22);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;color:var(--text);resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(155,95,192,0.22)'"></textarea>
+          </div>
+          <div id="winErr" style="font-size:0.78rem;color:#B84070;min-height:18px;margin-bottom:8px;"></div>
+          <button onclick="submitWin()" style="width:100%;background:linear-gradient(135deg,#FF9100,#D07000);color:white;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Share My Win →</button>
+        </div>
       </div>
     </div>
+
+    <!-- WINS GRID -->
+    <div id="winsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div style="text-align:center;padding:40px;color:var(--muted);grid-column:1/-1;">Loading wins...</div>
+    </div>
   </div>
+
+
 
 </div>
 
@@ -2132,6 +2094,8 @@ function mobileGoPage(id, navEl) {
   goPage(id, null);
   document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
   if(navEl) navEl.classList.add('active');
+  if(id==='community') loadPosts();
+  if(id==='wins') loadWins();
 }
 
 function showMobileUI() {
@@ -2146,6 +2110,326 @@ function showMobileUI() {
       if(ma) ma.textContent = (me['First Name']||'?')[0].toUpperCase();
     }
   }
+}
+
+
+// ══════════════════════════════════
+// COMMUNITY & WIN WALL
+// ══════════════════════════════════
+const AT_POSTS_URL   = 'https://api.airtable.com/v0/appfp4v9kpc0LjZaF/tblqU9lfzBsq6I5Yb';
+const AT_REPLIES_URL = 'https://api.airtable.com/v0/appfp4v9kpc0LjZaF/tblJJZHAMjZnx0n9v';
+const AT_WINS_URL    = 'https://api.airtable.com/v0/appfp4v9kpc0LjZaF/tbltYBGf18s931Kij';
+
+let currentPostId   = null;
+let currentPostTitle = '';
+let allPosts        = [];
+let currentFilter   = 'all';
+
+// ── AIRTABLE HELPERS FOR NEW TABLES ──
+async function atPostCreate(fields){
+  const r = await fetch(AT_POSTS_URL, {method:'POST',headers:AT_HEADS,body:JSON.stringify({records:[{fields}]})}); 
+  const d = await r.json(); return d.records?d.records[0]:null;
+}
+async function atPostList(){
+  const r = await fetch(AT_POSTS_URL+'?sort%5B0%5D%5Bfield%5D=Is+Pinned&sort%5B0%5D%5Bdirection%5D=desc&sort%5B1%5D%5Bfield%5D=Created&sort%5B1%5D%5Bdirection%5D=desc&maxRecords=50',{headers:AT_HEADS});
+  const d = await r.json(); return d.records||[];
+}
+async function atPostLike(id, current){
+  await fetch(AT_POSTS_URL+'/'+id,{method:'PATCH',headers:AT_HEADS,body:JSON.stringify({fields:{'Likes':(current||0)+1}})});
+}
+async function atReplyCreate(fields){
+  const r = await fetch(AT_REPLIES_URL,{method:'POST',headers:AT_HEADS,body:JSON.stringify({records:[{fields}]})});
+  const d = await r.json(); return d.records?d.records[0]:null;
+}
+async function atReplyList(postId){
+  const url = AT_REPLIES_URL+'?filterByFormula='+encodeURIComponent('Post+ID="'+postId+'"')+'&sort%5B0%5D%5Bfield%5D=Created&sort%5B0%5D%5Bdirection%5D=asc&maxRecords=50';
+  const r = await fetch(AT_REPLIES_URL+'?maxRecords=100',{headers:AT_HEADS});
+  const d = await r.json();
+  return (d.records||[]).filter(r=>r.fields['Post ID']===postId);
+}
+async function atReplyLike(id, current){
+  await fetch(AT_REPLIES_URL+'/'+id,{method:'PATCH',headers:AT_HEADS,body:JSON.stringify({fields:{'Likes':(current||0)+1}})});
+}
+async function atWinCreate(fields){
+  const r = await fetch(AT_WINS_URL,{method:'POST',headers:AT_HEADS,body:JSON.stringify({records:[{fields}]})});
+  const d = await r.json(); return d.records?d.records[0]:null;
+}
+async function atWinList(){
+  const r = await fetch(AT_WINS_URL+'?sort%5B0%5D%5Bfield%5D=Is+Featured&sort%5B0%5D%5Bdirection%5D=desc&sort%5B1%5D%5Bfield%5D=Likes&sort%5B1%5D%5Bdirection%5D=desc&maxRecords=50',{headers:AT_HEADS});
+  const d = await r.json(); return d.records||[];
+}
+async function atWinLike(id, current){
+  await fetch(AT_WINS_URL+'/'+id,{method:'PATCH',headers:AT_HEADS,body:JSON.stringify({fields:{'Likes':(current||0)+1}})});
+}
+
+// ── COMMUNITY POSTS ──
+async function loadPosts(){
+  const list = document.getElementById('postsList');
+  if(!list) return;
+  try{
+    allPosts = await atPostList();
+    renderPosts();
+  } catch(e){ list.innerHTML='<div style="text-align:center;padding:30px;color:#B84070">⚠ Could not load posts. Please try again.</div>'; }
+}
+
+function renderPosts(){
+  const list = document.getElementById('postsList');
+  if(!list) return;
+  let posts = allPosts;
+  if(currentFilter !== 'all') posts = allPosts.filter(p=>p.fields['Category']===currentFilter);
+  if(!posts.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">No posts yet in this category. Be the first to post! 💜</div>'; return; }
+  
+  const winIcons = {'Salary':'💰','Advice':'💬','Real Talk':'🔥','Freelance':'✍️','Resources':'📚','Weekly Challenge':'🏆','Wins':'⭐','default':'💬'};
+  
+  list.innerHTML = posts.map(p=>{
+    const f = p.fields;
+    const icon = winIcons[f['Category']]||winIcons['default'];
+    const isPinned = f['Is Pinned'];
+    const isChallenge = f['Is Challenge'];
+    const timeAgo = getTimeAgo(f['Created']);
+    return `
+    <div style="background:white;border-radius:12px;border:1.5px solid ${isPinned?'var(--gold-on-dark)':'rgba(155,95,192,0.13)'};padding:20px 24px;transition:all 0.2s;cursor:pointer;" 
+         onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateX(4px)'" 
+         onmouseout="this.style.borderColor='${isPinned?'var(--gold-on-dark)':'rgba(155,95,192,0.13)''}';this.style.transform='translateX(0)'"
+         onclick="openPost('${p.id}','${(f['Title']||'').replace(/'/g,"\\'")}')" >
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            ${isPinned?'<span style="font-size:0.6rem;background:rgba(255,145,0,0.15);color:#FF9100;padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">📌 Pinned</span>':''}
+            ${isChallenge?'<span style="font-size:0.6rem;background:rgba(155,95,192,0.12);color:var(--gold);padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Weekly Challenge</span>':''}
+            <span style="font-size:0.62rem;background:rgba(155,95,192,0.08);color:#6A3A9A;padding:2px 8px;border-radius:100px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;">${icon} ${f['Category']||'General'}</span>
+          </div>
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--deep);margin-bottom:6px;">${f['Title']||'Untitled'}</div>
+          <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:10px;">${(f['Body']||'').substring(0,150)}${(f['Body']||'').length>150?'...':''}</div>
+          <div style="display:flex;align-items:center;gap:16px;font-size:0.72rem;color:var(--muted);">
+            <span>✦ ${f['Author Name']||'Anonymous'}</span>
+            <span>${timeAgo}</span>
+            <button onclick="event.stopPropagation();likePost('${p.id}',${f['Likes']||0},this)" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:4px;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(155,95,192,0.2)';this.style.color='var(--muted)'">
+              ♥ <span class="like-count">${f['Likes']||0}</span>
+            </button>
+            <button onclick="event.stopPropagation();openReply('${p.id}','${(f['Title']||'').replace(/'/g,"\\'")}')" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.72rem;color:var(--muted);transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(155,95,192,0.2)';this.style.color='var(--muted)'">
+              💬 Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterPosts(cat, btn){
+  currentFilter = cat;
+  document.querySelectorAll('#catFilters .btn').forEach(b=>{b.className='btn btn-outline';b.style.fontSize='0.71rem';b.style.padding='7px 13px';});
+  btn.className='btn btn-primary'; btn.style.fontSize='0.71rem'; btn.style.padding='7px 13px';
+  renderPosts();
+}
+
+async function likePost(postId, currentLikes, btn){
+  await atPostLike(postId, currentLikes);
+  const span = btn.querySelector('.like-count');
+  if(span) span.textContent = currentLikes + 1;
+  btn.style.borderColor='var(--gold)'; btn.style.color='var(--gold)';
+  showToast('❤️ Liked!', 'Thanks for supporting this post.');
+}
+
+// ── NEW POST ──
+function openNewPost(){
+  if(!me) return;
+  const paid = (me['Tier']||'free')==='pro'||(me['Tier']||'free')==='enterprise';
+  if(!paid) return showUpgrade('post in the community');
+  document.getElementById('newPostModal').style.display='flex';
+}
+function closeNewPost(){ document.getElementById('newPostModal').style.display='none'; }
+
+async function submitPost(){
+  const title = document.getElementById('postTitle').value.trim();
+  const body  = document.getElementById('postBody').value.trim();
+  const cat   = document.getElementById('postCategory').value;
+  const errEl = document.getElementById('postErr');
+  if(!title||!body) return errEl.textContent='⚠ Please fill in all fields.';
+  errEl.textContent='Posting...'; errEl.style.color='var(--sage)';
+  try{
+    await atPostCreate({
+      'Title':title,'Body':body,'Category':cat,
+      'Author Email':me['Email']||'',
+      'Author Name':(me['First Name']||'')+' '+(me['Last Name']||''),
+      'Likes':0,'Is Pinned':false,'Is Challenge':false
+    });
+    closeNewPost();
+    document.getElementById('postTitle').value='';
+    document.getElementById('postBody').value='';
+    errEl.textContent='';
+    showToast('Post shared! ✦','Your post is now live in The Circle.');
+    await loadPosts();
+  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Error: '+e.message; }
+}
+
+// ── VIEW POST & REPLIES ──
+async function openPost(postId, postTitle){
+  currentPostId = postId;
+  currentPostTitle = postTitle;
+  // Find the post
+  const post = allPosts.find(p=>p.id===postId);
+  if(!post) return;
+  const f = post.fields;
+  const timeAgo = getTimeAgo(f['Created']);
+  
+  // Show post detail view
+  const list = document.getElementById('postsList');
+  list.innerHTML = `
+    <button onclick="loadPosts()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:0.82rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:6px;">← Back to posts</button>
+    <div style="background:white;border-radius:14px;border:1px solid rgba(155,95,192,0.13);padding:28px;">
+      <span style="font-size:0.62rem;background:rgba(155,95,192,0.08);color:#6A3A9A;padding:2px 8px;border-radius:100px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;display:inline-block;margin-bottom:12px;">${f['Category']||'General'}</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--deep);margin-bottom:10px;">${f['Title']||''}</h2>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:16px;">✦ ${f['Author Name']||'Anonymous'} · ${timeAgo}</div>
+      <div style="font-size:0.88rem;color:var(--text);line-height:1.8;white-space:pre-wrap;margin-bottom:20px;">${f['Body']||''}</div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="likePost('${postId}',${f['Likes']||0},this)" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:8px;padding:6px 16px;cursor:pointer;font-size:0.8rem;color:var(--muted);display:flex;align-items:center;gap:5px;">♥ <span class="like-count">${f['Likes']||0}</span> Likes</button>
+        <button onclick="openReply('${postId}','${postTitle}')" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:6px 16px;cursor:pointer;font-size:0.8rem;font-weight:600;">💬 Reply</button>
+      </div>
+    </div>
+    <div id="repliesSection" style="margin-top:20px;">
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--deep);margin-bottom:14px;">Replies</div>
+      <div id="repliesList"><div style="text-align:center;padding:20px;color:var(--muted)">Loading replies...</div></div>
+    </div>
+  `;
+  
+  // Load replies
+  try{
+    const replies = await atReplyList(postId);
+    const repliesList = document.getElementById('repliesList');
+    if(!repliesList) return;
+    if(!replies.length){
+      repliesList.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-style:italic;">No replies yet — be the first to respond! 💜</div>';
+      return;
+    }
+    repliesList.innerHTML = replies.map(r=>{
+      const rf = r.fields;
+      return `<div style="background:white;border-radius:10px;border:1px solid rgba(155,95,192,0.1);padding:16px 20px;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--sage));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.75rem;color:white;font-weight:700;">${(rf['Author Name']||'?')[0].toUpperCase()}</div>
+          <div style="font-size:0.8rem;font-weight:600;color:var(--text)">${rf['Author Name']||'Anonymous'}</div>
+          <div style="font-size:0.7rem;color:var(--muted);margin-left:auto">${getTimeAgo(rf['Created'])}</div>
+        </div>
+        <div style="font-size:0.83rem;color:var(--text);line-height:1.6;margin-bottom:8px;">${rf['Body']||''}</div>
+        <button onclick="atReplyLike('${r.id}',${rf['Likes']||0}).then(()=>openPost('${postId}','${postTitle}'))" style="background:none;border:1px solid rgba(155,95,192,0.15);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.7rem;color:var(--muted);">♥ ${rf['Likes']||0}</button>
+      </div>`;
+    }).join('');
+  } catch(e){ console.error('Reply load error:', e); }
+}
+
+// ── REPLIES ──
+function openReply(postId, postTitle){
+  if(!me) return;
+  const paid = (me['Tier']||'free')==='pro'||(me['Tier']||'free')==='enterprise';
+  if(!paid) return showUpgrade('reply to community posts');
+  currentPostId = postId;
+  currentPostTitle = postTitle;
+  document.getElementById('replyPostTitle').textContent = postTitle;
+  document.getElementById('replyBody').value = '';
+  document.getElementById('replyErr').textContent = '';
+  document.getElementById('replyModal').style.display='flex';
+}
+function closeReply(){ document.getElementById('replyModal').style.display='none'; }
+
+async function submitReply(){
+  const body  = document.getElementById('replyBody').value.trim();
+  const errEl = document.getElementById('replyErr');
+  if(!body) return errEl.textContent='⚠ Please write your reply first.';
+  errEl.textContent='Posting...'; errEl.style.color='var(--sage)';
+  try{
+    await atReplyCreate({
+      'Post ID': currentPostId,
+      'Body': body,
+      'Author Email': me['Email']||'',
+      'Author Name': (me['First Name']||'')+' '+(me['Last Name']||''),
+      'Likes': 0
+    });
+    closeReply();
+    showToast('Reply posted! ✦','Your reply is now live.');
+    openPost(currentPostId, currentPostTitle);
+  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Error: '+e.message; }
+}
+
+// ── WIN WALL ──
+async function loadWins(){
+  const grid = document.getElementById('winsGrid');
+  if(!grid) return;
+  try{
+    const wins = await atWinList();
+    if(!wins.length){
+      grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);grid-column:1/-1">No wins yet — share yours and inspire other women! ⭐</div>';
+      return;
+    }
+    const typeIcons = {'Salary':'💰','Promotion':'🚀','Remote Work':'🏠','Flexibility':'⏰','PTO':'✈️','Contract':'📋','Benefits':'🎓','Other':'⭐'};
+    const typeColors = {'Salary':'var(--gold)','Promotion':'#9B5FC0','Remote Work':'#7B5EA7','Flexibility':'#FF9100','PTO':'#C99EE0','Contract':'var(--rust)','Benefits':'var(--gold-light)','Other':'#9B5FC0'};
+    grid.style.gridTemplateColumns = 'repeat(3,1fr)';
+    grid.innerHTML = wins.map(w=>{
+      const f = w.fields;
+      const icon = typeIcons[f['Win Type']]||'⭐';
+      const color = typeColors[f['Win Type']]||'var(--gold)';
+      const isFeatured = f['Is Featured'];
+      return `
+      <div style="background:white;border-radius:12px;border:1px solid rgba(155,95,192,0.13);border-left:4px solid ${color};padding:20px;transition:all 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(155,95,192,0.12)'" onmouseout="this.style.boxShadow='none'">
+        ${isFeatured?'<div style="font-size:0.6rem;background:rgba(255,145,0,0.12);color:#FF9100;padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-bottom:8px;">🏆 Featured</div>':''}
+        <div style="font-size:1.3rem;margin-bottom:8px;">${icon}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--deep);margin-bottom:6px;">${f['Author Name']||'Anonymous'} — ${f['Amount']||''}</div>
+        <div style="font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic;">"${(f['Tip']||'').substring(0,180)}${(f['Tip']||'').length>180?'...':''}"</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:0.68rem;color:var(--muted)">${getTimeAgo(f['Created'])}</div>
+          <button onclick="atWinLike('${w.id}',${f['Likes']||0}).then(()=>loadWins())" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.7rem;color:var(--muted);">❤️ ${f['Likes']||0}</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e){ grid.innerHTML='<div style="text-align:center;padding:30px;color:#B84070;grid-column:1/-1">⚠ Could not load wins.</div>'; }
+}
+
+function openNewWin(){
+  if(!me) return;
+  const paid = (me['Tier']||'free')==='pro'||(me['Tier']||'free')==='enterprise';
+  if(!paid) return showUpgrade('share your wins on the Win Wall');
+  document.getElementById('newWinModal').style.display='flex';
+}
+function closeNewWin(){ document.getElementById('newWinModal').style.display='none'; }
+
+async function submitWin(){
+  const type    = document.getElementById('winType').value;
+  const amount  = document.getElementById('winAmount').value.trim();
+  const company = document.getElementById('winCompany').value.trim();
+  const tip     = document.getElementById('winTip').value.trim();
+  const errEl   = document.getElementById('winErr');
+  if(!amount||!tip) return errEl.textContent='⚠ Please fill in amount and your tip.';
+  errEl.textContent='Sharing your win...'; errEl.style.color='var(--sage)';
+  try{
+    await atWinCreate({
+      'Win Type':type,'Amount':amount,'Company':company||'Confidential',
+      'Tip':tip,
+      'Author Email':me['Email']||'',
+      'Author Name':(me['First Name']||'')+' '+(me['Last Name']||''),
+      'Likes':0,'Is Featured':false
+    });
+    closeNewWin();
+    document.getElementById('winAmount').value='';
+    document.getElementById('winCompany').value='';
+    document.getElementById('winTip').value='';
+    errEl.textContent='';
+    showToast('Win shared! ⭐','Your win is now live on the Win Wall. You inspire us!');
+    await loadWins();
+  } catch(e){ errEl.style.color='#B84070'; errEl.textContent='⚠ Error: '+e.message; }
+}
+
+// ── TIME HELPER ──
+function getTimeAgo(dateStr){
+  if(!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff/60000);
+  const hrs  = Math.floor(diff/3600000);
+  const days = Math.floor(diff/86400000);
+  if(mins<1)  return 'just now';
+  if(mins<60) return mins+'m ago';
+  if(hrs<24)  return hrs+'h ago';
+  if(days<7)  return days+'d ago';
+  return new Date(dateStr).toLocaleDateString();
 }
 
 async function bootApp(){
