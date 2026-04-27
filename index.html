@@ -2177,42 +2177,42 @@ function renderPosts(){
   if(!list) return;
   let posts = allPosts;
   if(currentFilter !== 'all') posts = allPosts.filter(p=>p.fields['Category']===currentFilter);
-  if(!posts.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">No posts yet in this category. Be the first to post! 💜</div>'; return; }
-  
+  if(!posts.length){
+    list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">No posts yet. Be the first to post! 💜</div>';
+    return;
+  }
   const catIcons = {'Salary':'💰','Advice':'💬','Real Talk':'🔥','Freelance':'✍️','Resources':'📚','Weekly Challenge':'🏆','Wins':'⭐'};
-  
-  list.innerHTML = posts.map(function(p){
-    var f = p.fields;
-    var icon = catIcons[f['Category']] || '💬';
-    var isPinned = f['Is Pinned'] ? true : false;
-    var isChallenge = f['Is Challenge'] ? true : false;
-    var timeAgo = getTimeAgo(f['Created']);
-    var borderColor = isPinned ? 'var(--gold-on-dark)' : 'rgba(155,95,192,0.13)';
-    var pinnedBadge = isPinned ? '<span style="font-size:0.6rem;background:rgba(255,145,0,0.15);color:#FF9100;padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">📌 Pinned</span>' : '';
-    var challengeBadge = isChallenge ? '<span style="font-size:0.6rem;background:rgba(155,95,192,0.12);color:var(--gold);padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Weekly Challenge</span>' : '';
-    var title = (f['Title']||'Untitled').replace(/"/g,'&quot;');
-    var body = (f['Body']||'').substring(0,150) + ((f['Body']||'').length>150?'...':'');
-    var authorName = f['Author Name'] || 'Anonymous';
-    var likes = f['Likes'] || 0;
-    var safeTitle = (f['Title']||'').replace(/'/g,"\'").replace(/"/g,'&quot;');
-    
-    return '<div style="background:white;border-radius:12px;border:1.5px solid '+borderColor+';padding:20px 24px;transition:all 0.2s;cursor:pointer;"' +
-      ' onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateX(4px)'"' +
-      ' onmouseout="this.style.borderColor=''+borderColor+'';this.style.transform='translateX(0)'"' +
-      ' onclick="openPost(''+p.id+'',''+safeTitle+'')">' +
-      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">' +
-      '<div style="flex:1;">' +
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">'+pinnedBadge+challengeBadge+
-      '<span style="font-size:0.62rem;background:rgba(155,95,192,0.08);color:#6A3A9A;padding:2px 8px;border-radius:100px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;">'+icon+' '+(f['Category']||'General')+'</span></div>' +
-      '<div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--deep);margin-bottom:6px;">'+title+'</div>' +
-      '<div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:10px;">'+body+'</div>' +
-      '<div style="display:flex;align-items:center;gap:16px;font-size:0.72rem;color:var(--muted);">' +
-      '<span>✦ '+authorName+'</span>' +
-      '<span>'+timeAgo+'</span>' +
-      '<button onclick="event.stopPropagation();likePost(''+p.id+'','+likes+',this)" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.72rem;color:var(--muted);display:inline-flex;align-items:center;gap:4px;">♥ <span class=\"like-count\">'+likes+'</span></button>' +
-      '<button onclick="event.stopPropagation();openReply(''+p.id+'',''+safeTitle+'')" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.72rem;color:var(--muted);">💬 Reply</button>' +
-      '</div></div></div></div>';
-  }).join('');
+  let html = '';
+  for(let i=0;i<posts.length;i++){
+    const p = posts[i];
+    const f = p.fields;
+    const icon = catIcons[f['Category']] || '💬';
+    const isPinned = f['Is Pinned'] ? true : false;
+    const isChallenge = f['Is Challenge'] ? true : false;
+    const timeAgo = getTimeAgo(f['Created']);
+    const borderColor = isPinned ? 'var(--gold-on-dark)' : 'rgba(155,95,192,0.13)';
+    const title = (f['Title']||'Untitled');
+    const body = (f['Body']||'').substring(0,150) + ((f['Body']||'').length>150?'...':'');
+    const authorName = f['Author Name'] || 'Anonymous';
+    const likes = f['Likes'] || 0;
+    const safeId = p.id;
+    const safeTitle = title.replace(/\\/g,'').replace(/'/g,'');
+    const pinnedBadge = isPinned ? '<span style="font-size:0.6rem;background:rgba(255,145,0,0.15);color:#FF9100;padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase">📌 Pinned</span>' : '';
+    const challengeBadge = isChallenge ? '<span style="font-size:0.6rem;background:rgba(155,95,192,0.12);color:var(--gold);padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase">Weekly Challenge</span>' : '';
+    const catBadge = '<span style="font-size:0.62rem;background:rgba(155,95,192,0.08);color:#6A3A9A;padding:2px 8px;border-radius:100px;font-weight:600;text-transform:uppercase">'+icon+' '+(f['Category']||'General')+'</span>';
+    html += '<div style="background:white;border-radius:12px;border:1.5px solid '+borderColor+';padding:20px 24px;transition:all 0.2s;cursor:pointer;margin-bottom:12px;"'
+          + ' onclick="openPost(\'' + safeId + '\',\'' + safeTitle + '\')">'
+          + '<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">' + pinnedBadge + challengeBadge + catBadge + '</div>'
+          + '<div style="font-family:Playfair Display,serif;font-size:1rem;color:var(--deep);margin-bottom:6px;">' + title + '</div>'
+          + '<div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:10px;">' + body + '</div>'
+          + '<div style="display:flex;align-items:center;gap:12px;font-size:0.72rem;color:var(--muted);">'
+          + '<span>✦ ' + authorName + '</span>'
+          + '<span>' + timeAgo + '</span>'
+          + '<button onclick="event.stopPropagation();likePost(\'' + safeId + '\',' + likes + ',this)" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.72rem;color:var(--muted);">♥ ' + likes + '</button>'
+          + '<button onclick="event.stopPropagation();openReply(\'' + safeId + '\',\'' + safeTitle + '\')" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.72rem;color:var(--muted);">💬 Reply</button>'
+          + '</div></div>';
+  }
+  list.innerHTML = html;
 }
 function filterPosts(cat, btn){
   currentFilter = cat;
