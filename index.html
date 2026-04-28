@@ -1259,69 +1259,109 @@
 
   <!-- ── LEARN ── -->
   <div class="page" id="page-learn">
-    <div class="page-header">
-      <div>
-        <h2>Learn the Art</h2>
-        <p>Master every dimension of negotiation with structured, research-backed lessons.</p>
+
+    <!-- LESSON MODAL -->
+    <div id="lessonModal" style="display:none;position:fixed;inset:0;background:rgba(30,16,48,0.95);z-index:998;overflow-y:auto;padding:20px;">
+      <div style="max-width:720px;margin:0 auto;">
+        <button onclick="closeLessonModal()" style="background:none;border:none;color:rgba(237,214,248,0.5);cursor:pointer;font-size:0.82rem;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:20px;padding:0;">← Back to lessons</button>
+        <div id="lessonContent" style="background:white;border-radius:20px;overflow:hidden;"></div>
       </div>
     </div>
 
-    <div class="skills-grid">
-      <div class="skill-card" onclick="openLesson('Salary & Compensation')">
-        <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(155,95,192,0.1),rgba(232,201,122,0.15))">💰</div>
-        <div class="skill-body">
-          <div class="skill-title">Salary & Compensation</div>
-          <div class="skill-desc">Know your market value, anchor high, and never leave money on the table.</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
-          <div class="progress-label"><span>65% complete</span><span>7/11 lessons</span></div>
+    <!-- TRACKS VIEW -->
+    <div id="tracksView">
+      <div class="page-header">
+        <div>
+          <h2>Learn the Art</h2>
+          <p>Master every dimension of negotiation with structured, research-backed lessons.</p>
+        </div>
+        <div id="streakBadge" style="text-align:right;"></div>
+      </div>
+
+      <!-- User Progress Summary -->
+      <div id="progressSummary" style="background:var(--deep);border-radius:14px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;gap:24px;">
+        <div style="flex:1;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-bottom:6px;">Your Learning Journey</div>
+          <div style="font-size:0.82rem;color:rgba(237,214,248,0.55);margin-bottom:12px;" id="progressText">Complete lessons to track your progress</div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:8px;overflow:hidden;">
+            <div id="overallProgress" style="height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gold-on-dark),#FF6B35);width:0%;transition:width 1s ease;"></div>
+          </div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--gold-on-dark);font-weight:900;line-height:1;" id="completedCount">0</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:rgba(237,214,248,0.5);margin-top:4px;">Lessons Done</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--rust);font-weight:900;line-height:1;" id="streakCount">0</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:rgba(237,214,248,0.5);margin-top:4px;">Day Streak 🔥</div>
         </div>
       </div>
-      <div class="skill-card" onclick="openLesson('Contract Negotiation')">
-        <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(184,92,56,0.1),rgba(200,110,70,0.15))">📋</div>
-        <div class="skill-body">
-          <div class="skill-title">Contract Negotiation</div>
-          <div class="skill-desc">Freelance, vendor, or employment — protect your terms and your time.</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
-          <div class="progress-label"><span>30% complete</span><span>3/10 lessons</span></div>
+
+      <div class="skills-grid">
+        <div class="skill-card" onclick="openTrack('salary')">
+          <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(155,95,192,0.1),rgba(208,179,249,0.15))">💰</div>
+          <div class="skill-body">
+            <div class="skill-title">Salary & Compensation</div>
+            <div class="skill-desc">Know your market value, anchor high, and never leave money on the table.</div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-salary" style="width:0%"></div></div>
+            <div class="progress-label"><span id="prog-salary-txt">0% complete</span><span>5 lessons</span></div>
+          </div>
         </div>
-      </div>
-      <div class="skill-card" onclick="openLesson('Everyday Negotiation')">
-        <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(107,143,110,0.1),rgba(130,170,133,0.15))">🤝</div>
-        <div class="skill-body">
-          <div class="skill-title">Everyday Negotiation</div>
-          <div class="skill-desc">From deadlines to dinner plans — negotiation is a daily practice.</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:10%"></div></div>
-          <div class="progress-label"><span>10% complete</span><span>1/8 lessons</span></div>
+        <div class="skill-card" onclick="openTrack('contract')">
+          <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(123,94,167,0.1),rgba(155,95,192,0.15))">📋</div>
+          <div class="skill-body">
+            <div class="skill-title">Contract Negotiation</div>
+            <div class="skill-desc">Freelance, vendor, or employment — protect your terms and your time.</div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-contract" style="width:0%"></div></div>
+            <div class="progress-label"><span id="prog-contract-txt">0% complete</span><span>4 lessons</span></div>
+          </div>
         </div>
-      </div>
-      <div class="skill-card" onclick="openLesson('Body Language & Presence')">
-        <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(155,95,192,0.1),rgba(201,158,224,0.15))">🦋</div>
-        <div class="skill-body">
-          <div class="skill-title">Body Language & Presence</div>
-          <div class="skill-desc">Project confidence before you speak. Posture, pause, and power.</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
-          <div class="progress-label"><span>Not started</span><span>0/6 lessons</span></div>
+        <div class="skill-card" onclick="openTrack('everyday')">
+          <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(208,179,249,0.15),rgba(155,95,192,0.1))">🤝</div>
+          <div class="skill-body">
+            <div class="skill-title">Everyday Negotiation</div>
+            <div class="skill-desc">From deadlines to dinner plans — negotiation is a daily practice.</div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-everyday" style="width:0%"></div></div>
+            <div class="progress-label"><span id="prog-everyday-txt">0% complete</span><span>4 lessons</span></div>
+          </div>
         </div>
-      </div>
-      <div class="skill-card" onclick="openLesson('Handling Pushback')">
-        <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(155,95,192,0.08),rgba(155,95,192,0.12))">🛡️</div>
-        <div class="skill-body">
-          <div class="skill-title">Handling Pushback</div>
-          <div class="skill-desc">When they say no, you say "here's why that works for both of us."</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
-          <div class="progress-label"><span>50% complete</span><span>4/8 lessons</span></div>
+        <div class="skill-card" onclick="openTrack('body')">
+          <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(155,95,192,0.08),rgba(208,179,249,0.12))">🦋</div>
+          <div class="skill-body">
+            <div class="skill-title">Body Language & Presence</div>
+            <div class="skill-desc">Project confidence before you speak. Posture, pause, and power.</div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-body" style="width:0%"></div></div>
+            <div class="progress-label"><span id="prog-body-txt">0% complete</span><span>3 lessons</span></div>
+          </div>
         </div>
-      </div>
-      <div class="skill-card" onclick="openLesson('Emotional Intelligence')">
-        <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(155,95,192,0.08),rgba(196,99,122,0.12))">❤️</div>
-        <div class="skill-body">
-          <div class="skill-title">Emotional Intelligence</div>
-          <div class="skill-desc">Turn empathy into strategy. Read the room. Regulate, don't suppress.</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
-          <div class="progress-label"><span>20% complete</span><span>2/9 lessons</span></div>
+        <div class="skill-card" onclick="openTrack('pushback')">
+          <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(123,94,167,0.1),rgba(155,95,192,0.12))">🛡️</div>
+          <div class="skill-body">
+            <div class="skill-title">Handling Pushback</div>
+            <div class="skill-desc">When they say no, you say "here's why that works for both of us."</div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-pushback" style="width:0%"></div></div>
+            <div class="progress-label"><span id="prog-pushback-txt">0% complete</span><span>4 lessons</span></div>
+          </div>
+        </div>
+        <div class="skill-card" onclick="openTrack('emotional')">
+          <div class="skill-thumb" style="background:linear-gradient(135deg,rgba(208,179,249,0.12),rgba(155,95,192,0.1))">❤️</div>
+          <div class="skill-body">
+            <div class="skill-title">Emotional Intelligence</div>
+            <div class="skill-desc">Turn empathy into strategy. Read the room. Regulate, don't suppress.</div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-emotional" style="width:0%"></div></div>
+            <div class="progress-label"><span id="prog-emotional-txt">0% complete</span><span>4 lessons</span></div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- TRACK LESSONS VIEW -->
+    <div id="trackView" style="display:none;">
+      <button onclick="closeTrack()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:0.82rem;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:20px;padding:0;">← Back to tracks</button>
+      <div id="trackHeader" style="margin-bottom:24px;"></div>
+      <div id="lessonsList" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+
   </div>
 
   <!-- ── PRACTICE ── -->
@@ -1599,6 +1639,7 @@
     if (navEl) navEl.classList.add('active');
     if(id==='community') loadPosts();
     if(id==='wins') loadWins();
+    if(id==='learn') loadUserProgress();
   }
 
   // ── LESSON OPEN ──
@@ -2015,7 +2056,7 @@ function launchApp(){
   document.getElementById('authOverlay').style.display='none';
   document.querySelector('.sidebar').style.display='flex';
   document.querySelector('.main').style.display='block';
-  updateSidebar(); applyTierUI(); showMobileUI();
+  updateSidebar(); applyTierUI(); showMobileUI(); loadUserProgress();
 }
 
 function updateSidebar(){
@@ -2444,6 +2485,754 @@ function getTimeAgo(dateStr){
   if(hrs<24)  return hrs+'h ago';
   if(days<7)  return days+'d ago';
   return new Date(dateStr).toLocaleDateString();
+}
+
+
+// ══════════════════════════════════
+// LESSON SYSTEM
+// ══════════════════════════════════
+const AT_PROGRESS_URL = 'https://api.airtable.com/v0/appfp4v9kpc0LjZaF/tbl2sUTG87uYyjWYZ';
+
+// ── LESSON CONTENT DATABASE ──
+const TRACKS = {
+  salary: {
+    id: 'salary', title: 'Salary & Compensation', icon: '💰', color: '#9B5FC0',
+    lessons: [
+      {
+        id: 'sal-1', title: 'Know Your Market Value', duration: '8 min', free: true,
+        content: `<h3>Know Your Market Value</h3>
+<p>The single most powerful thing you can do before any salary negotiation is arrive with data. Not feelings. Not assumptions. Data.</p>
+<h4>Why This Matters</h4>
+<p>Research shows that women who cite specific market data in salary negotiations earn an average of 18% more than those who don't. The number you bring to the table anchors the entire conversation.</p>
+<h4>Where to Research</h4>
+<ul>
+<li><strong>LinkedIn Salary</strong> — filtered by title, location, and experience level</li>
+<li><strong>Glassdoor</strong> — includes total compensation breakdowns</li>
+<li><strong>Levels.fyi</strong> — especially useful for tech roles</li>
+<li><strong>Bureau of Labor Statistics</strong> — government data by occupation</li>
+<li><strong>Industry associations</strong> — many publish annual salary surveys</li>
+</ul>
+<h4>What to Document</h4>
+<p>Before your negotiation, write down: the salary range for your role in your city, the median for someone with your years of experience, and 3 specific contributions you've made that justify the higher end of the range.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Pull data from at least 3 sources and use the range, not a single number. "Based on my research across LinkedIn, Glassdoor, and industry reports, the market rate for this role in our city is $X to $Y" is far more powerful than "I think I should earn more."</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Before moving on, complete this exercise:</p>
+<ol>
+<li>Look up your current role on LinkedIn Salary, Glassdoor, and one other source</li>
+<li>Write down the salary range you find for your location and experience level</li>
+<li>Note whether you are above, at, or below market</li>
+<li>Write one sentence you could say out loud: "Based on my research, the market rate for this role is..."</li>
+</ol>
+<p>Practice saying that sentence out loud 3 times. Confidence comes from repetition.</p>`
+      },
+      {
+        id: 'sal-2', title: 'The High Anchor Technique', duration: '6 min', free: true,
+        content: `<h3>The High Anchor Technique</h3>
+<p>The first number stated in a negotiation has a disproportionate influence on the final outcome. This is called anchoring, and it's one of the most well-documented phenomena in negotiation research.</p>
+<h4>How Anchoring Works</h4>
+<p>When you state a number first — and make it ambitious — you shift the entire range of what feels reasonable. Even if they counter lower, the final number will typically be higher than if you had let them anchor first.</p>
+<h4>The Formula</h4>
+<p>Your anchor should be: <strong>your target number + 15-20%</strong></p>
+<p>If you want $85,000, open at $95,000-$100,000. If they counter at $80,000, you meet in the middle at $87,500 — which is above your target.</p>
+<h4>How to Deliver It</h4>
+<p>Say it with calm confidence. Not apologetically. Not as a question. As a statement of fact:</p>
+<p><em>"Based on my research and the value I bring to this role, I'm looking at $95,000."</em></p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Use a specific number rather than a round one. "$97,500" feels more researched than "$100,000" and is harder to dismiss.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Calculate YOUR anchor number:</p>
+<ol>
+<li>Write down your target salary</li>
+<li>Add 15% — this is your anchor</li>
+<li>Write the sentence: "Based on my research, I'm looking at $[anchor]"</li>
+<li>Say it out loud 5 times until it feels natural, not scary</li>
+</ol>
+<p>The discomfort you feel saying a high number out loud is normal. It fades with practice. The money does not.</p>`
+      },
+      {
+        id: 'sal-3', title: 'Handling the Counter-Offer', duration: '7 min', free: false,
+        content: `<h3>Handling the Counter-Offer</h3>
+<p>They've countered lower than you wanted. This is not a rejection — it's the beginning of the real negotiation. How you respond in the next 30 seconds determines the outcome.</p>
+<h4>The Three Rules</h4>
+<p><strong>1. Don't accept immediately.</strong> Even if the counter is acceptable, pausing signals that you take this seriously and may prompt them to improve it.</p>
+<p><strong>2. Don't reject dramatically.</strong> Keep the energy collaborative. You're solving a problem together, not fighting.</p>
+<p><strong>3. Come back with a specific counter.</strong> Vague responses ("I was hoping for more") get vague results. Specific numbers get specific outcomes.</p>
+<h4>The Script</h4>
+<p><em>"I appreciate that offer. I was hoping we could get closer to $X. Is there flexibility there?"</em></p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> After your counter, stop talking. The silence is strategic. Let them fill it.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Role-play this scenario out loud:</p>
+<p>You anchored at $97,500. They countered at $82,000. Your target is $87,000.</p>
+<ol>
+<li>Write your counter-offer response</li>
+<li>Practice it out loud until you can say it without hesitation</li>
+<li>Practice the silence — count to 10 after you say it</li>
+</ol>`
+      },
+      {
+        id: 'sal-4', title: 'Beyond Base Salary', duration: '8 min', free: false,
+        content: `<h3>Beyond Base Salary</h3>
+<p>Most women leave significant value on the table by focusing only on base salary. Total compensation includes much more — and some of it is easier to negotiate than salary.</p>
+<h4>What Else Is Negotiable</h4>
+<ul>
+<li><strong>Signing bonus</strong> — often easier to get than salary increases</li>
+<li><strong>Annual bonus target</strong> — the percentage matters</li>
+<li><strong>Equity / stock options</strong> — especially at startups</li>
+<li><strong>PTO days</strong> — 5 extra days at $50/hr = $2,000</li>
+<li><strong>Remote work</strong> — saves commute costs and time</li>
+<li><strong>Professional development budget</strong> — courses, conferences</li>
+<li><strong>Title</strong> — affects future earning potential</li>
+<li><strong>Start date</strong> — gives you time to decompress</li>
+</ul>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> If they can't move on salary, shift to "Can we look at the total package?" This opens new negotiating room without making them feel they lost on salary.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Make your own total compensation wish list:</p>
+<ol>
+<li>List every non-salary item that matters to you</li>
+<li>Rank them by priority</li>
+<li>Assign a dollar value to each (e.g. 5 PTO days = $X)</li>
+<li>Practice saying: "If we can't move on base salary, could we look at [your top 2 items]?"</li>
+</ol>`
+      },
+      {
+        id: 'sal-5', title: 'The Annual Review Playbook', duration: '10 min', free: false,
+        content: `<h3>The Annual Review Playbook</h3>
+<p>Annual reviews are the most common negotiation moment — and the most underprepared for. Here's your complete playbook.</p>
+<h4>90 Days Before</h4>
+<p>Start documenting your wins. Revenue generated, costs saved, projects led, problems solved. Numbers are your best friend.</p>
+<h4>30 Days Before</h4>
+<p>Research market rates. Have a conversation with your manager about what success looks like. Ask: "What would I need to demonstrate to be considered for a raise this cycle?"</p>
+<h4>The Meeting</h4>
+<p>Open by summarizing your year in numbers. Then make your ask with your market research. Then be quiet.</p>
+<h4>If They Say No</h4>
+<p>Ask: "What would need to be true for me to earn $X?" Get specifics. Set a follow-up date. Document everything.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Always negotiate in person or video, never by email. Energy and silence are your tools.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Build your review prep document right now:</p>
+<ol>
+<li>List your 5 biggest accomplishments from the past year with numbers</li>
+<li>Research your market rate (3 sources)</li>
+<li>Write your opening statement (2-3 sentences max)</li>
+<li>Write your ask sentence: "Based on X and Y, I'm looking to move to $Z"</li>
+<li>Practice it out loud twice</li>
+</ol>`
+      }
+    ]
+  },
+  contract: {
+    id: 'contract', title: 'Contract Negotiation', icon: '📋', color: '#7B5EA7',
+    lessons: [
+      {
+        id: 'con-1', title: 'Reading a Contract Like a Pro', duration: '7 min', free: true,
+        content: `<h3>Reading a Contract Like a Pro</h3>
+<p>Most people sign contracts without reading them. The ones who do read them often don't know what to look for. Here's what matters most.</p>
+<h4>The 5 Most Important Clauses</h4>
+<p><strong>1. Payment terms</strong> — Net-30 vs Net-15 vs upon delivery. Always push for faster payment.</p>
+<p><strong>2. Scope of work</strong> — Be precise. Vague scope = free work you didn't plan for.</p>
+<p><strong>3. Kill fee / cancellation clause</strong> — If they cancel, you should be compensated for work done.</p>
+<p><strong>4. Intellectual property</strong> — Who owns the work? Make sure it's clear.</p>
+<p><strong>5. Non-compete / non-solicitation</strong> — How long and how broad? These can limit your future income.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> You don't need a lawyer for every contract review — but for anything over $10,000 or with non-compete clauses, it's worth the investment.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Find a contract you've signed recently (employment, freelance, service agreement).</p>
+<ol>
+<li>Locate each of the 5 clauses above</li>
+<li>Note anything that seems unfavorable</li>
+<li>Write one change you would negotiate if you could</li>
+</ol>`
+      },
+      {
+        id: 'con-2', title: 'Negotiating Your Rate', duration: '8 min', free: true,
+        content: `<h3>Negotiating Your Rate as a Freelancer</h3>
+<p>Setting and defending your rate is one of the hardest things for freelancers — especially women, who are statistically more likely to underprice their services.</p>
+<h4>How to Set Your Rate</h4>
+<p>Calculate your annual income target → divide by billable hours (typically 1,000-1,200/year for freelancers) → add 30% for taxes, benefits, and overhead.</p>
+<p>Example: Want to net $80,000? You need to bill $80,000 ÷ 1,100 hours × 1.3 = <strong>$94/hour minimum</strong>.</p>
+<h4>When They Push Back</h4>
+<p>Don't justify. Don't apologize. Acknowledge and redirect:</p>
+<p><em>"I understand that's above your initial budget. My rate reflects [specific value]. Is there a way to adjust the scope that would work for both of us?"</em></p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Having another client interested (or being willing to walk away) is the most powerful negotiating position. Build your BATNA before the conversation.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<ol>
+<li>Calculate your minimum viable rate using the formula above</li>
+<li>Look up what others in your field charge (freelancer forums, LinkedIn, Glassdoor)</li>
+<li>Practice this sentence out loud: "My rate for this project is $X."</li>
+<li>Then practice the silence that follows</li>
+</ol>`
+      },
+      {
+        id: 'con-3', title: 'The Kill Fee and Other Protections', duration: '6 min', free: false,
+        content: `<h3>The Kill Fee and Other Protections</h3>
+<p>A kill fee protects you when a client cancels a project after work has begun. Without one, you may do weeks of work and receive nothing.</p>
+<h4>Standard Kill Fee Structure</h4>
+<ul>
+<li>Cancellation before work begins: 25% of total project fee</li>
+<li>Cancellation at 25-50% completion: 50% of total fee</li>
+<li>Cancellation at 50%+ completion: 75-100% of total fee</li>
+</ul>
+<h4>Other Essential Protections</h4>
+<p><strong>Deposit:</strong> Always require 25-50% upfront. This filters serious clients and protects your time.</p>
+<p><strong>Revision limits:</strong> Specify how many rounds of revisions are included. Additional rounds = additional fees.</p>
+<p><strong>Late payment fees:</strong> 1.5-2% per month on overdue invoices is standard and enforceable.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Frame these protections as "standard practice" not personal distrust. "This is how I structure all my contracts" removes the awkwardness.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Draft your standard contract terms:</p>
+<ol>
+<li>Write your kill fee structure</li>
+<li>Write your deposit requirement</li>
+<li>Write your revision policy</li>
+<li>Practice saying: "These are my standard contract terms" without apologizing</li>
+</ol>`
+      },
+      {
+        id: 'con-4', title: 'Renegotiating an Existing Contract', duration: '7 min', free: false,
+        content: `<h3>Renegotiating an Existing Contract</h3>
+<p>Your business grows. Your costs change. Your value increases. Renegotiating existing client contracts is a normal, professional part of running a business — not a betrayal of trust.</p>
+<h4>When to Renegotiate</h4>
+<ul>
+<li>Annual contract renewal</li>
+<li>Scope has expanded beyond original agreement</li>
+<li>Your market rate has increased significantly</li>
+<li>You've delivered exceptional results</li>
+</ul>
+<h4>The Conversation Framework</h4>
+<p>1. Reference the value you've delivered (with numbers)</p>
+<p>2. Note the market context ("rates in our industry have increased X%")</p>
+<p>3. Make your ask clearly and specifically</p>
+<p>4. Give adequate notice (30-60 days for rate increases)</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Long-term clients often accept rate increases more easily than new ones because switching costs are high for them. Don't be afraid to ask.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Identify one existing contract or arrangement you could renegotiate:</p>
+<ol>
+<li>List the value you've delivered since it was last negotiated</li>
+<li>Research current market rates</li>
+<li>Write your renegotiation opening sentence</li>
+<li>Decide: what's your walk-away point?</li>
+</ol>`
+      }
+    ]
+  },
+  everyday: {
+    id: 'everyday', title: 'Everyday Negotiation', icon: '🤝', color: '#C99EE0',
+    lessons: [
+      {
+        id: 'eve-1', title: 'Everything Is Negotiable', duration: '5 min', free: true,
+        content: `<h3>Everything Is Negotiable</h3>
+<p>Most people think negotiation only happens in formal settings — salary reviews, contract signings, car dealerships. In reality, negotiation happens dozens of times a day.</p>
+<h4>What You Can Negotiate (That You Probably Don't)</h4>
+<ul>
+<li>Deadlines and timelines</li>
+<li>Project scope and deliverables</li>
+<li>Meeting agendas and length</li>
+<li>Your workload and priorities</li>
+<li>Vendor and supplier rates</li>
+<li>Credit card interest rates</li>
+<li>Medical bills</li>
+<li>Hotel rates and upgrades</li>
+<li>Late fees and penalties</li>
+</ul>
+<h4>The Mindset Shift</h4>
+<p>Most things in life have a "posted price" and a "real price." The posted price is for people who don't ask. The real price is for people who do.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Start practicing with low-stakes situations (a late fee, a hotel rate) to build your negotiation muscle before the high-stakes conversations.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>This week, try to negotiate something small:</p>
+<ol>
+<li>Call your credit card company and ask for a lower interest rate</li>
+<li>Ask a vendor for a discount if you pay early</li>
+<li>Ask a hotel for a room upgrade at check-in</li>
+</ol>
+<p>The goal isn't to always win — it's to practice asking. Track what happens!</p>`
+      },
+      {
+        id: 'eve-2', title: 'Negotiating Deadlines and Workload', duration: '6 min', free: true,
+        content: `<h3>Negotiating Deadlines and Workload</h3>
+<p>Women are disproportionately likely to take on more work than they can handle without pushing back. This leads to burnout, lower quality work, and resentment. Learning to negotiate workload is self-care AND career strategy.</p>
+<h4>When Someone Asks You to Take On More</h4>
+<p>You have three options:</p>
+<p><strong>1. Accept with conditions:</strong> "I can do that if we move X off my plate."</p>
+<p><strong>2. Negotiate the deadline:</strong> "I can have that to you by [realistic date], not [their date]."</p>
+<p><strong>3. Decline clearly:</strong> "I don't have the capacity for this right now without something else moving."</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> "I want to make sure I do this well, so I want to be realistic about timing" is a powerful reframe. It's not about you — it's about quality.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Think of a recent situation where you accepted a deadline or workload that felt unrealistic.</p>
+<ol>
+<li>Write what you said</li>
+<li>Write what you could have said instead using one of the 3 frameworks above</li>
+<li>Practice that alternative out loud</li>
+</ol>`
+      },
+      {
+        id: 'eve-3', title: 'Asking for What You Need', duration: '6 min', free: false,
+        content: `<h3>Asking for What You Need</h3>
+<p>Research consistently shows that women ask for what they need less often than men — and when they do ask, they tend to ask for less. The good news: this is a learned behavior, and it can be unlearned.</p>
+<h4>Why We Don't Ask</h4>
+<ul>
+<li>Fear of being seen as difficult or demanding</li>
+<li>Not wanting to seem ungrateful</li>
+<li>Assuming the answer will be no</li>
+<li>Not feeling worthy of asking</li>
+</ul>
+<h4>The Reframe</h4>
+<p>Asking for what you need is not selfish. It is information-sharing. You are telling the other person what would make you more effective, happier, and more productive. That serves everyone.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Replace "I was wondering if maybe..." with "I need..." or "I'd like..." The language of confidence sounds different from the language of apology.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Write down 3 things you need right now that you haven't asked for yet:</p>
+<ol>
+<li>At work</li>
+<li>In a personal relationship</li>
+<li>From yourself</li>
+</ol>
+<p>Choose one and ask for it this week. Notice what happens.</p>`
+      },
+      {
+        id: 'eve-4', title: 'Negotiating with Confidence Under Pressure', duration: '7 min', free: false,
+        content: `<h3>Negotiating with Confidence Under Pressure</h3>
+<p>High-pressure negotiation moments — when someone is pushing back hard, when you feel put on the spot, when emotions are running high — are where preparation meets reality.</p>
+<h4>The PAUSE Framework</h4>
+<p><strong>P</strong> — Pause before responding. Even 3 seconds changes the dynamic.</p>
+<p><strong>A</strong> — Acknowledge what they said without agreeing.</p>
+<p><strong>U</strong> — Understand their position by asking a question.</p>
+<p><strong>S</strong> — State your position clearly.</p>
+<p><strong>E</strong> — Explore options together.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> "That's an interesting perspective — let me think about that" buys you time without conceding anything.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Practice the PAUSE framework with this scenario:</p>
+<p>Your manager says: "We really need this done by Friday, no exceptions."</p>
+<ol>
+<li>Write your PAUSE response</li>
+<li>Practice saying it out loud slowly</li>
+<li>Note: how does slowing down change how you feel?</li>
+</ol>`
+      }
+    ]
+  },
+  body: {
+    id: 'body', title: 'Body Language & Presence', icon: '🦋', color: '#D0B3F9',
+    lessons: [
+      {
+        id: 'bod-1', title: 'The Power of Presence', duration: '6 min', free: true,
+        content: `<h3>The Power of Presence</h3>
+<p>How you carry yourself before you say a word communicates more than your words ever will. Research from Amy Cuddy and others shows that body language affects not just how others perceive us — but how we perceive ourselves.</p>
+<h4>What Confidence Looks Like</h4>
+<ul>
+<li><strong>Posture:</strong> Straight spine, shoulders back and down (not up)</li>
+<li><strong>Eye contact:</strong> Hold it for 3-5 seconds before looking away</li>
+<li><strong>Space:</strong> Take up the space you're entitled to. Don't shrink.</li>
+<li><strong>Voice:</strong> Slow down. Lower pitch slightly. Avoid upspeak (ending statements as questions?)</li>
+<li><strong>Hands:</strong> Visible and calm. Not fidgeting, not hiding.</li>
+</ul>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Before a high-stakes negotiation, spend 2 minutes in a power pose in private (standing tall, arms wide). Research shows this increases confidence measurably.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Stand up right now and:</p>
+<ol>
+<li>Set a 2-minute timer</li>
+<li>Stand in a power pose — feet shoulder-width apart, hands on hips or arms wide</li>
+<li>Breathe slowly and deeply</li>
+<li>Notice how your internal state shifts</li>
+</ol>
+<p>Do this before your next important conversation.</p>`
+      },
+      {
+        id: 'bod-2', title: 'Strategic Silence', duration: '5 min', free: false,
+        content: `<h3>Strategic Silence</h3>
+<p>Silence is one of the most underused tools in negotiation. Most people feel compelled to fill silence — and in doing so, they make concessions, reveal information, or undermine their own position.</p>
+<h4>Why Silence Works</h4>
+<p>When you make your ask and then stop talking, the other person feels the pressure to respond. That response is almost always more informative — and often more favorable — than what they would have said if you kept talking.</p>
+<h4>The Rule</h4>
+<p>After you state your number or make your ask: <strong>stop talking</strong>. Count to 10 in your head if you need to. Do not break the silence first.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> The person who speaks first after a number is stated is usually at a disadvantage. Train yourself to be comfortable with silence.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Practice silence right now:</p>
+<ol>
+<li>Say out loud: "Based on my research, I'm looking at $95,000."</li>
+<li>Then set a timer for 15 seconds and sit in silence</li>
+<li>Notice the urge to speak. Don't.</li>
+<li>Repeat 3 times until the silence feels less uncomfortable</li>
+</ol>`
+      },
+      {
+        id: 'bod-3', title: 'Reading the Room', duration: '7 min', free: false,
+        content: `<h3>Reading the Room</h3>
+<p>Great negotiators are great observers. Learning to read the signals in a room — both verbal and non-verbal — gives you information you can use to adapt your approach in real time.</p>
+<h4>Signals of Openness</h4>
+<ul>
+<li>Leaning forward</li>
+<li>Uncrossed arms</li>
+<li>Frequent nodding</li>
+<li>Direct eye contact</li>
+<li>Open questions ("what would work for you?")</li>
+</ul>
+<h4>Signals of Resistance</h4>
+<ul>
+<li>Crossed arms or legs</li>
+<li>Leaning back</li>
+<li>Looking away or at phone</li>
+<li>Short, clipped responses</li>
+<li>Deflecting to "company policy"</li>
+</ul>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> When you see resistance signals, don't push harder — ask a question. "Help me understand what's driving that concern" opens the conversation back up.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>In your next meeting, practice observation:</p>
+<ol>
+<li>Watch for 3 openness signals from someone who agrees with an idea</li>
+<li>Watch for 3 resistance signals from someone who pushes back</li>
+<li>Notice: how does their body language predict what they say next?</li>
+</ol>`
+      }
+    ]
+  },
+  pushback: {
+    id: 'pushback', title: 'Handling Pushback', icon: '🛡️', color: '#7B5EA7',
+    lessons: [
+      {
+        id: 'push-1', title: 'When They Say No', duration: '7 min', free: true,
+        content: `<h3>When They Say No</h3>
+<p>"No" is not the end of a negotiation. It is the beginning. Most people treat the first "no" as final — which means most people leave value on the table in almost every negotiation they have.</p>
+<h4>Types of No</h4>
+<p><strong>"No" = "not yet"</strong> — They need more information or time.</p>
+<p><strong>"No" = "not this way"</strong> — They object to the specific request, not the underlying need.</p>
+<p><strong>"No" = "I need to feel heard first"</strong> — They want acknowledgment before moving forward.</p>
+<p><strong>"No" = actual no</strong> — The boundary is real. Respect it and move to alternatives.</p>
+<h4>The Response Framework</h4>
+<p>1. Acknowledge: "I understand."</p>
+<p>2. Explore: "Can you help me understand what's driving that?"</p>
+<p>3. Reframe: "What if we approached it this way instead?"</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> "What would need to be true for you to say yes?" is one of the most powerful questions in any negotiation.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Think of a recent "no" you received:</p>
+<ol>
+<li>Which type of "no" do you think it was?</li>
+<li>What question could you have asked to explore further?</li>
+<li>Write a follow-up response you could still use</li>
+</ol>`
+      },
+      {
+        id: 'push-2', title: '"We Don't Have the Budget"', duration: '6 min', free: true,
+        content: `<h3>"We Don't Have the Budget"</h3>
+<p>This is the most common objection in salary and contract negotiations. It feels final. It isn't.</p>
+<h4>What It Usually Means</h4>
+<p>It means: "We haven't allocated budget for this" or "We weren't expecting this ask" or "We need to justify this internally." It rarely means: "There is literally no money anywhere."</p>
+<h4>Your Response Options</h4>
+<p><strong>Option 1:</strong> "I appreciate you sharing that. When does the next budget cycle start? I'd like to plan for that conversation."</p>
+<p><strong>Option 2:</strong> "If the budget isn't there for base salary, could we look at [signing bonus / extra PTO / earlier review date]?"</p>
+<p><strong>Option 3:</strong> "Help me understand — is it a budget issue or a value issue? Because if it's value, I'd love to talk about how to demonstrate that."</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> "We don't have budget" often means "we haven't prioritized this yet." Your job is to make the case for prioritization.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Practice responding to "we don't have the budget" out loud using all 3 options. Which feels most natural to you? Which gets the best outcome in the imagined scenario?</p>`
+      },
+      {
+        id: 'push-3', title: 'Handling Aggressive Negotiators', duration: '8 min', free: false,
+        content: `<h3>Handling Aggressive Negotiators</h3>
+<p>Some negotiators use pressure tactics — artificial urgency, dismissiveness, extreme anchors, personal attacks. Knowing how to handle them keeps you in control.</p>
+<h4>Common Tactics and How to Counter Them</h4>
+<p><strong>Artificial urgency:</strong> "This offer expires today." → "I need time to make a good decision. I'll get back to you by [specific date]."</p>
+<p><strong>Dismissiveness:</strong> "That's not realistic." → "Help me understand your concern with that number."</p>
+<p><strong>Extreme low anchor:</strong> → Don't react emotionally. Counter with your researched anchor and explain it.</p>
+<p><strong>Personal pressure:</strong> "I thought you were serious about this." → "I am serious, which is why I'm being thoughtful."</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Name the tactic calmly. "It seems like there's some pressure to decide quickly. I want to make a good decision for both of us." This disrupts the tactic without escalating conflict.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Practice responding to this aggressive statement:</p>
+<p>"I don't know where you're getting those numbers but they're way off base. We can offer $70,000 and that's our final offer."</p>
+<ol>
+<li>Write your calm, confident response</li>
+<li>Practice it out loud without apologizing or getting defensive</li>
+</ol>`
+      },
+      {
+        id: 'push-4', title: 'Walking Away with Grace', duration: '6 min', free: false,
+        content: `<h3>Walking Away with Grace</h3>
+<p>The most powerful position in any negotiation is genuine willingness to walk away. Not as a bluff — as a real option you've prepared for.</p>
+<h4>Building Your BATNA</h4>
+<p>BATNA = Best Alternative To a Negotiated Agreement. Before any important negotiation, write down exactly what you will do if it doesn't work out.</p>
+<p>Having a strong BATNA doesn't mean you want to use it. It means you don't need to accept a bad deal.</p>
+<h4>How to Walk Away</h4>
+<p>"I appreciate the time and conversation. Based on where we are, I don't think we're able to reach an agreement right now. If the situation changes on your end, I'm open to revisiting."</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Walking away often brings them back — sometimes with a better offer. And if it doesn't, your BATNA was better anyway.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>For your next important negotiation:</p>
+<ol>
+<li>Write down your BATNA — what will you do if this doesn't work?</li>
+<li>Rate your BATNA: is it strong, medium, or weak?</li>
+<li>If it's weak, what can you do this week to strengthen it?</li>
+</ol>`
+      }
+    ]
+  },
+  emotional: {
+    id: 'emotional', title: 'Emotional Intelligence', icon: '❤️', color: '#C99EE0',
+    lessons: [
+      {
+        id: 'em-1', title: 'Emotions Are Information', duration: '6 min', free: true,
+        content: `<h3>Emotions Are Information</h3>
+<p>For a long time, "being emotional" in negotiation was seen as a weakness — particularly for women. The research tells a different story. Emotional intelligence is one of the strongest predictors of negotiation success.</p>
+<h4>The Difference Between Feeling and Reacting</h4>
+<p><strong>Feeling</strong> an emotion is normal and human. <strong>Reacting</strong> from an unprocessed emotion is what undermines negotiations.</p>
+<p>The goal is not to suppress your emotions — it's to understand them, regulate them, and use the information they give you.</p>
+<h4>What Your Emotions Are Telling You</h4>
+<ul>
+<li><strong>Anxiety</strong> = this matters to you. Prepare more.</li>
+<li><strong>Anger</strong> = a boundary is being crossed. Name it.</li>
+<li><strong>Excitement</strong> = you want this. Be careful not to show all your cards.</li>
+<li><strong>Shame</strong> = old story about worth. Challenge it.</li>
+</ul>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Before a high-stakes negotiation, name your emotion out loud to yourself: "I'm feeling anxious because this matters to me." Naming it reduces its power over you.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Think of an upcoming negotiation or difficult conversation:</p>
+<ol>
+<li>What emotions come up when you think about it?</li>
+<li>What is each emotion telling you?</li>
+<li>What would you need to feel more grounded going in?</li>
+</ol>`
+      },
+      {
+        id: 'em-2', title: 'Empathy as Strategy', duration: '7 min', free: true,
+        content: `<h3>Empathy as Strategy</h3>
+<p>Understanding what the other person needs — not just what they're saying — is one of the most powerful negotiating tools available. This is not weakness. It is intelligence.</p>
+<h4>The Key Insight</h4>
+<p>People rarely negotiate purely on logic. They negotiate to feel heard, respected, secure, and successful. When you help them feel those things, they become more flexible on the numbers.</p>
+<h4>Practical Empathy</h4>
+<p><strong>Listen more than you talk.</strong> Aim for 60/40 — them talking 60% of the time.</p>
+<p><strong>Reflect back.</strong> "It sounds like the timeline is the main concern for you."</p>
+<p><strong>Ask about their constraints.</strong> "What's driving the decision on your end?" Often reveals room you didn't know existed.</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> "Help me understand your position" is one of the most disarming sentences in negotiation. It signals respect and opens doors.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>In your next meeting or conversation:</p>
+<ol>
+<li>Set an intention to listen more than you speak</li>
+<li>Practice reflecting back: "It sounds like..." or "What I'm hearing is..."</li>
+<li>Ask one "what's driving that for you?" question</li>
+<li>Notice what new information you learn</li>
+</ol>`
+      },
+      {
+        id: 'em-3', title: 'Managing Negotiation Anxiety', duration: '7 min', free: false,
+        content: `<h3>Managing Negotiation Anxiety</h3>
+<p>Negotiation anxiety is real, common, and manageable. Here's what the research says actually works.</p>
+<h4>What Doesn't Work</h4>
+<p>"Calm down" and "don't be nervous" are useless. Trying to suppress anxiety often amplifies it.</p>
+<h4>What Does Work</h4>
+<p><strong>Reframe anxiety as excitement.</strong> Both have the same physiological signature. Saying "I'm excited" instead of "I'm nervous" measurably improves performance.</p>
+<p><strong>Prepare until you're confident.</strong> Most negotiation anxiety comes from feeling underprepared. The cure is preparation.</p>
+<p><strong>Focus on curiosity, not outcome.</strong> "I'm curious what they'll say" is less anxiety-producing than "I need to get X."</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> The physical sensations of anxiety (racing heart, dry mouth) are your body preparing you for performance. Welcome them.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>Before your next negotiation:</p>
+<ol>
+<li>Notice your anxiety and name it: "I'm feeling anxious"</li>
+<li>Say out loud: "I'm excited about this conversation"</li>
+<li>Do 3 slow deep breaths</li>
+<li>Say your opening line out loud twice</li>
+</ol>`
+      },
+      {
+        id: 'em-4', title: 'When Tears Come Up', duration: '6 min', free: false,
+        content: `<h3>When Tears Come Up</h3>
+<p>This topic is rarely discussed but widely experienced. Many women cry during difficult professional conversations — not because they're weak, but because they're human beings who care deeply about their work and their worth.</p>
+<h4>First: No Shame</h4>
+<p>Tears in a negotiation do not mean you lost. They mean you're invested. The shame spiral that follows is more damaging than the tears themselves.</p>
+<h4>In the Moment</h4>
+<p>If you feel tears coming: take a slow breath, look slightly upward (physically helps), and say calmly: "I feel strongly about this, which is why I want to make sure we get it right."</p>
+<p>You can also take a break: "Can we take 5 minutes?"</p>
+<h4>After</h4>
+<p>You can acknowledge it simply and move forward: "I care a lot about this — let's keep going."</p>
+<div class="lesson-tip">💡 <strong>Pro Tip:</strong> Preparing thoroughly reduces emotional overwhelm. The more you've rehearsed, the less you'll be caught off guard.</div>`,
+        exercise: `<h4>🎯 Practice Exercise</h4>
+<p>This is a preparation exercise:</p>
+<ol>
+<li>Think of the negotiation that scares you most right now</li>
+<li>Write down the worst-case scenario</li>
+<li>Write down: "Even if that happens, I will..."</li>
+<li>Notice: having a plan for the worst case reduces the fear of it</li>
+</ol>`
+      }
+    ]
+  }
+};
+
+let completedLessons = new Set();
+let currentTrack = null;
+
+// ── PROGRESS AIRTABLE HELPERS ──
+async function loadUserProgress(){
+  if(!me) return;
+  try{
+    const r = await fetch(AT_PROGRESS_URL+'?maxRecords=200',{headers:AT_HEADS});
+    const d = await r.json();
+    const records = d.records||[];
+    completedLessons = new Set(
+      records
+        .filter(rec=>rec.fields['User Email']===(me['Email']||''))
+        .filter(rec=>rec.fields['Completed'])
+        .map(rec=>rec.fields['Lesson ID'])
+    );
+    updateProgressUI();
+  } catch(e){ console.log('Progress load error:', e); }
+}
+
+async function markLessonComplete(lessonId, lessonTitle, track){
+  if(!me || completedLessons.has(lessonId)) return;
+  try{
+    await fetch(AT_PROGRESS_URL,{
+      method:'POST', headers:AT_HEADS,
+      body:JSON.stringify({records:[{fields:{
+        'User Email': me['Email']||'',
+        'Lesson ID': lessonId,
+        'Lesson Title': lessonTitle,
+        'Track': track,
+        'Completed': true,
+        'Completed Date': new Date().toISOString().split('T')[0]
+      }}]})
+    });
+    completedLessons.add(lessonId);
+    // Update streak in users table
+    const newStreak = (me['Streak']||0) + 1;
+    await atUpdate(me.id, {'Streak': newStreak, 'Last Active': new Date().toISOString().split('T')[0]});
+    me['Streak'] = newStreak;
+    updateProgressUI();
+    showToast('Lesson complete! 🎉', 'Keep going — you are building real skills.');
+  } catch(e){ console.log('Progress save error:', e); }
+}
+
+function updateProgressUI(){
+  const total = Object.values(TRACKS).reduce((sum,t)=>sum+t.lessons.length,0);
+  const done = completedLessons.size;
+  const pct = total>0 ? Math.round((done/total)*100) : 0;
+  
+  const bar = document.getElementById('overallProgress');
+  const cnt = document.getElementById('completedCount');
+  const txt = document.getElementById('progressText');
+  const streak = document.getElementById('streakCount');
+  
+  if(bar) bar.style.width = pct+'%';
+  if(cnt) cnt.textContent = done;
+  if(txt) txt.textContent = done===0 ? 'Start your first lesson to begin tracking progress!' : done+' of '+total+' lessons complete ('+pct+'%)';
+  if(streak) streak.textContent = me['Streak']||0;
+  
+  // Update track progress bars
+  Object.values(TRACKS).forEach(track=>{
+    const trackLessons = track.lessons;
+    const trackDone = trackLessons.filter(l=>completedLessons.has(l.id)).length;
+    const trackPct = trackLessons.length>0 ? Math.round((trackDone/trackLessons.length)*100) : 0;
+    const bar = document.getElementById('prog-'+track.id);
+    const txt = document.getElementById('prog-'+track.id+'-txt');
+    if(bar) bar.style.width = trackPct+'%';
+    if(txt) txt.textContent = trackPct+'% complete';
+  });
+}
+
+// ── TRACK VIEW ──
+function openTrack(trackId){
+  const track = TRACKS[trackId];
+  if(!track) return;
+  currentTrack = track;
+  const paid = (me&&(me['Tier']||'free')==='pro') || (me&&(me['Tier']||'free')==='enterprise');
+  
+  document.getElementById('tracksView').style.display='none';
+  document.getElementById('trackView').style.display='block';
+  
+  document.getElementById('trackHeader').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+      <span style="font-size:2rem;">${track.icon}</span>
+      <div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--deep);">${track.title}</h2>
+        <p style="color:var(--muted);font-size:0.85rem;">${track.lessons.length} lessons</p>
+      </div>
+    </div>
+  `;
+  
+  const list = document.getElementById('lessonsList');
+  let html = '';
+  track.lessons.forEach((lesson, idx)=>{
+    const isComplete = completedLessons.has(lesson.id);
+    const isLocked = !lesson.free && !paid;
+    const isFreePreview = lesson.free;
+    
+    html += `<div style="background:white;border-radius:12px;border:1.5px solid ${isComplete?'var(--gold)':'rgba(155,95,192,0.13)'};padding:18px 22px;display:flex;align-items:center;gap:16px;cursor:${isLocked?'default':'pointer'};transition:all 0.2s;opacity:${isLocked?'0.6':'1'};"
+      ${!isLocked?'onclick="openLesson(''+lesson.id+'')"':''}
+      onmouseover="if(!${isLocked}) this.style.borderColor='var(--gold)'"
+      onmouseout="if(!${isComplete}) this.style.borderColor='rgba(155,95,192,0.13)'"
+    >
+      <div style="width:40px;height:40px;border-radius:50%;background:${isComplete?'var(--gold)':isLocked?'rgba(155,95,192,0.1)':'rgba(155,95,192,0.1)'};display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;color:${isComplete?'white':'var(--gold)'};">
+        ${isComplete?'✓':isLocked?'🔒':(idx+1)}
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:600;color:var(--text);font-size:0.9rem;margin-bottom:3px;">${lesson.title}</div>
+        <div style="font-size:0.75rem;color:var(--muted);">⏱ ${lesson.duration} ${isFreePreview?'· <span style=\"color:var(--sage);font-weight:600\">Free Preview</span>':''}</div>
+      </div>
+      <div style="flex-shrink:0;">
+        ${isComplete?'<span style="font-size:0.7rem;background:rgba(155,95,192,0.1);color:var(--gold);padding:3px 10px;border-radius:100px;font-weight:600;">Completed ✓</span>':''}
+        ${isLocked?'<button onclick="event.stopPropagation();showUpgrade('unlock all lessons')" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:0.75rem;font-weight:600;">Upgrade</button>':''}
+        ${!isLocked&&!isComplete?'<span style="font-size:1.2rem;">→</span>':''}
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html;
+}
+
+function closeTrack(){
+  document.getElementById('tracksView').style.display='block';
+  document.getElementById('trackView').style.display='none';
+  currentTrack = null;
+}
+
+// ── LESSON VIEW ──
+function openLesson(lessonId){
+  let lesson = null;
+  let track = null;
+  Object.values(TRACKS).forEach(t=>{
+    const found = t.lessons.find(l=>l.id===lessonId);
+    if(found){ lesson=found; track=t; }
+  });
+  if(!lesson) return;
+  
+  const paid = (me&&(me['Tier']||'free')==='pro') || (me&&(me['Tier']||'free')==='enterprise');
+  if(!lesson.free && !paid){ showUpgrade('unlock all lessons'); return; }
+  
+  const isComplete = completedLessons.has(lesson.id);
+  
+  document.getElementById('lessonModal').style.display='block';
+  document.getElementById('lessonContent').innerHTML = `
+    <div style="background:var(--deep);padding:28px 32px 22px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <span style="font-size:1.2rem;">${track.icon}</span>
+        <span style="font-size:0.72rem;color:rgba(237,214,248,0.5);text-transform:uppercase;letter-spacing:0.1em;">${track.title}</span>
+      </div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--cream);margin-bottom:6px;">${lesson.title}</h2>
+      <div style="font-size:0.78rem;color:rgba(237,214,248,0.5);">⏱ ${lesson.duration} read</div>
+    </div>
+    <div style="padding:28px 32px;">
+      <div style="font-size:0.9rem;line-height:1.85;color:var(--text);" class="lesson-body">
+        ${lesson.content}
+      </div>
+      <div style="margin-top:28px;padding:20px 24px;background:rgba(155,95,192,0.06);border-radius:12px;border-left:4px solid var(--gold);">
+        ${lesson.exercise}
+      </div>
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;">
+        <button onclick="closeLessonModal()" style="background:none;border:1px solid rgba(155,95,192,0.3);border-radius:9px;padding:10px 20px;cursor:pointer;font-size:0.82rem;color:var(--muted);font-family:'DM Sans',sans-serif;">← Back</button>
+        ${isComplete 
+          ? '<span style="background:rgba(155,95,192,0.1);color:var(--gold);padding:10px 20px;border-radius:9px;font-size:0.82rem;font-weight:600;">✓ Completed</span>'
+          : '<button onclick="completeLessonBtn(''+lesson.id+'',''+lesson.title.replace(/'/g,'')+'',''+track.title+'')" style="background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:9px;padding:10px 24px;cursor:pointer;font-size:0.88rem;font-weight:700;font-family:'DM Sans',sans-serif;">Mark as Complete ✓</button>'
+        }
+      </div>
+    </div>
+  `;
+  
+  // Add lesson body styles
+  const style = document.createElement('style');
+  style.textContent = '.lesson-body h3,.lesson-body h4{font-family:"Playfair Display",serif;color:var(--deep);margin:20px 0 8px;}.lesson-body p{margin-bottom:12px;}.lesson-body ul,.lesson-body ol{margin:8px 0 12px 20px;}.lesson-body li{margin-bottom:6px;}.lesson-body strong{color:var(--deep);}.lesson-body em{font-style:italic;}.lesson-tip{background:rgba(255,145,0,0.08);border-left:3px solid var(--gold-on-dark);padding:12px 16px;border-radius:0 8px 8px 0;margin-top:16px;font-size:0.85rem;}';
+  document.head.appendChild(style);
+}
+
+async function completeLessonBtn(lessonId, lessonTitle, trackTitle){
+  await markLessonComplete(lessonId, lessonTitle, trackTitle);
+  // Refresh the button
+  const btn = document.querySelector('#lessonContent button[onclick*="completeLessonBtn"]');
+  if(btn) btn.outerHTML = '<span style="background:rgba(155,95,192,0.1);color:var(--gold);padding:10px 20px;border-radius:9px;font-size:0.82rem;font-weight:600;">✓ Completed</span>';
+  // Refresh track view if open
+  if(currentTrack) openTrack(currentTrack.id);
+}
+
+function closeLessonModal(){
+  document.getElementById('lessonModal').style.display='none';
 }
 
 async function bootApp(){
