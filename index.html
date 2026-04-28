@@ -1643,9 +1643,6 @@
   }
 
   // ── LESSON OPEN ──
-  function openLesson(name) {
-    showToast('Opening: ' + name, 'Lesson loading...');
-  }
 
   // ── UPVOTE ──
   function upvote(btn) {
@@ -3199,7 +3196,7 @@ function openTrack(trackId){
     else if(isLocked) rightEl = '<button onclick="event.stopPropagation();showUpgrade(&quot;unlock all lessons&quot;)" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:0.75rem;font-weight:600;">Upgrade</button>';
     else rightEl = '<span style="font-size:1.2rem;">→</span>';
     
-    const clickAttr = isLocked ? '' : ' data-lid="' + lesson.id + '" onclick="openLesson(this.getAttribute(\"data-lid\"))';
+    const clickAttr = isLocked ? '' : ' data-lid="' + lesson.id + '" onclick="openLesson(this.dataset.lid)"';
     const cursorStyle = isLocked ? 'default' : 'pointer';
     const opacityStyle = isLocked ? '0.6' : '1';
     
