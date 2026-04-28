@@ -2469,20 +2469,44 @@ async function loadWins(){
     grid.style.gridTemplateColumns = 'repeat(3,1fr)';
     grid.innerHTML = wins.map(w=>{
       const f = w.fields;
-      const icon = typeIcons[f['Win Type']]||'⭐';
-      const color = typeColors[f['Win Type']]||'var(--gold)';
-      const isFeatured = f['Is Featured'];
-      return `
-      <div style="background:white;border-radius:12px;border:1px solid rgba(155,95,192,0.13);border-left:4px solid ${color};padding:20px;transition:all 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(155,95,192,0.12)'" onmouseout="this.style.boxShadow='none'">
-        ${isFeatured?'<div style="font-size:0.6rem;background:rgba(255,145,0,0.12);color:#FF9100;padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-bottom:8px;">🏆 Featured</div>':''}
-        <div style="font-size:1.3rem;margin-bottom:8px;">${icon}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--deep);margin-bottom:6px;">${f['Author Name']||'Anonymous'} — ${f['Amount']||''}</div>
-        <div style="font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic;">"${(f['Tip']||'').substring(0,180)}${(f['Tip']||'').length>180?'...':''}"</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="font-size:0.68rem;color:var(--muted)">${getTimeAgo(f['Created'])}</div>
-          <button onclick="atWinLike('${w.id}',${f['Likes']||0}).then(()=>loadWins())" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.7rem;color:var(--muted);">❤️ ${f['Likes']||0}</button>
-        </div>
-      </div>`;
+      // Get field values - handles both short and long Airtable column names
+      function getField(fields, ...keys){
+        for(const k of keys){
+          if(fields[k] !== undefined && fields[k] !== null && fields[k] !== '') return fields[k];
+        }
+        // Try prefix match
+        const allKeys = Object.keys(fields);
+        for(const k of keys){
+          const match = allKeys.find(ak => ak.toLowerCase().startsWith(k.toLowerCase()));
+          if(match && fields[match]) return fields[match];
+        }
+        return '';
+      }
+      const winType   = getField(f, 'Win Type', 'Win Type (Salary,');
+      const amount    = getField(f, 'Amount', 'Amount (e.g.');
+      const company   = getField(f, 'Company', 'Company (optional');
+      const tip       = getField(f, 'Tip', 'Tip (advice');
+      const author    = getField(f, 'Author Name');
+      const likes     = f['Likes'] || 0;
+      const featured  = f['Is Featured'] || false;
+      const created   = f['Created'] || '';
+
+      const typeIcons  = {'Salary':'💰','Promotion':'🚀','Remote Work':'🏠','Flexibility':'⏰','PTO':'✈️','Contract':'📋','Benefits':'🎓','Other':'⭐'};
+      const typeColors = {'Salary':'var(--gold)','Promotion':'#9B5FC0','Remote Work':'#7B5EA7','Flexibility':'#FF9100','PTO':'#C99EE0','Contract':'#B84070','Benefits':'#C99EE0','Other':'#9B5FC0'};
+      const icon  = typeIcons[winType]  || '⭐';
+      const color = typeColors[winType] || 'var(--gold)';
+      const tipShort = tip.length > 180 ? tip.substring(0,180)+'...' : tip;
+      const featuredBadge = featured ? '<div style="font-size:0.6rem;background:rgba(255,145,0,0.12);color:#FF9100;padding:2px 8px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-bottom:8px;">🏆 Featured</div>' : '';
+
+      return '<div style="background:white;border-radius:12px;border:1px solid rgba(155,95,192,0.13);border-left:4px solid '+color+';padding:20px;transition:all 0.2s;">'
+        + featuredBadge
+        + '<div style="font-size:1.3rem;margin-bottom:8px;">'+icon+'</div>'
+        + '<div style="font-family:Playfair Display,serif;font-size:0.95rem;color:var(--deep);margin-bottom:6px;font-weight:600;">'+author+' — '+amount+'</div>'
+        + (tip ? '<div style="font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic;">"'+tipShort+'"</div>' : '')
+        + '<div style="display:flex;align-items:center;justify-content:space-between;">'
+        + '<div style="font-size:0.68rem;color:var(--muted)">'+getTimeAgo(created)+'</div>'
+        + '<button onclick="atWinLike(&quot;'+w.id+'&quot;,'+likes+').then(function(){loadWins()})" style="background:none;border:1px solid rgba(155,95,192,0.2);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.7rem;color:var(--muted);">❤️ '+likes+'</button>'
+        + '</div></div>';
     }).join('');
   } catch(e){ grid.innerHTML='<div style="text-align:center;padding:30px;color:#B84070;grid-column:1/-1">⚠ Could not load wins.</div>'; }
 }
@@ -2505,8 +2529,8 @@ async function submitWin(){
   errEl.textContent='Sharing your win...'; errEl.style.color='var(--sage)';
   try{
     await atWinCreate({
-      'Win Type':type,'Amount':amount,'Company':company||'Confidential',
-      'Tip':tip,
+      'Win Type':type,'Amount':amount,'Company (optional)':company||'Confidential',
+      'Tip (advice to other women)':tip,
       'Author Email':me['Email']||'',
       'Author Name':(me['First Name']||'')+' '+(me['Last Name']||''),
       'Likes':0,'Is Featured':false
