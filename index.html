@@ -1187,7 +1187,7 @@
           <button class="btn btn-outline" style="font-size:0.72rem;padding:6px 14px" onclick="showPage('learn', document.querySelector('[onclick*=learn]'))">All Lessons</button>
         </div>
         <div class="card-body">
-          <div class="lesson-item" onclick="openLesson('Anchoring Your Ask')">
+          <div class="lesson-item" onclick="openTrack('salary')">
             <div class="lesson-icon gold">⚓</div>
             <div class="lesson-info">
               <div class="lesson-title">Anchoring Your Ask</div>
@@ -1195,7 +1195,7 @@
             </div>
             <span class="pill hot">In Progress</span>
           </div>
-          <div class="lesson-item" onclick="openLesson('Silence as Power')">
+          <div class="lesson-item" onclick="openTrack('body')">
             <div class="lesson-icon rust">🤫</div>
             <div class="lesson-info">
               <div class="lesson-title">Silence as Power</div>
@@ -1203,7 +1203,7 @@
             </div>
             <span class="pill new">New</span>
           </div>
-          <div class="lesson-item" onclick="openLesson('Handling "We Have No Budget"')">
+          <div class="lesson-item" onclick="openTrack('pushback')">
             <div class="lesson-icon sage">🛡️</div>
             <div class="lesson-info">
               <div class="lesson-title">Handling "We Have No Budget"</div>
@@ -3152,7 +3152,7 @@ function openTrack(trackId){
     else if(isLocked) rightEl = '<button onclick="event.stopPropagation();showUpgrade(&quot;unlock all lessons&quot;)" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:0.75rem;font-weight:600;">Upgrade</button>';
     else rightEl = '<span style="font-size:1.2rem;">→</span>';
     
-    const clickAttr = isLocked ? '' : ' onclick="openLesson(\"' + lesson.id + '\")'";
+    const clickAttr = isLocked ? '' : ' data-lid="' + lesson.id + '" onclick="openLesson(this.getAttribute(\"data-lid\"))';
     const cursorStyle = isLocked ? 'default' : 'pointer';
     const opacityStyle = isLocked ? '0.6' : '1';
     
@@ -3194,7 +3194,7 @@ function openLesson(lessonId){
   if(isComplete){
     completeBtn = '<span style="background:rgba(155,95,192,0.1);color:var(--gold);padding:10px 20px;border-radius:9px;font-size:0.82rem;font-weight:600;">✓ Completed</span>';
   } else {
-    completeBtn = '<button onclick="completeLessonBtn(\'' + lesson.id + '\',\'' + lesson.title.replace(/'/g,'') + '\',\'' + track.title + '\')" style="background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:9px;padding:10px 24px;cursor:pointer;font-size:0.88rem;font-weight:700;font-family:DM Sans,sans-serif;">Mark as Complete ✓</button>';
+    completeBtn = '<button onclick="completeLessonBtn(\"' + lesson.id + '\",\"' + track.id + '\")" style="background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:9px;padding:10px 24px;cursor:pointer;font-size:0.88rem;font-weight:700;">Mark as Complete ✓</button>';
   }
   
   document.getElementById('lessonContent').innerHTML = 
@@ -3222,12 +3222,16 @@ function openLesson(lessonId){
     document.head.appendChild(style);
   }
 }
-async function completeLessonBtn(lessonId, lessonTitle, trackTitle){
-  await markLessonComplete(lessonId, lessonTitle, trackTitle);
-  // Refresh the button
+async function completeLessonBtn(lessonId, trackId){
+  // Find lesson and track info
+  const track = TRACKS[trackId];
+  if(!track) return;
+  const lesson = track.lessons.find(function(l){ return l.id===lessonId; });
+  if(!lesson) return;
+  await markLessonComplete(lessonId, lesson.title, track.title);
+  // Refresh button
   const btn = document.querySelector('#lessonContent button[onclick*="completeLessonBtn"]');
   if(btn) btn.outerHTML = '<span style="background:rgba(155,95,192,0.1);color:var(--gold);padding:10px 20px;border-radius:9px;font-size:0.82rem;font-weight:600;">✓ Completed</span>';
-  // Refresh track view if open
   if(currentTrack) openTrack(currentTrack.id);
 }
 
