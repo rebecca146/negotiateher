@@ -1662,7 +1662,7 @@
   const scenarios = {
     salary: {
       status: 'Salary Negotiation Role-Play Active',
-      intro: `Let's role-play your annual review. I'll be your manager.\n\nSetting: You've been at the company 2 years. You've led two major projects. Industry data shows you're underpaid by ~15%. Your manager opens the review.\n\n**Manager:** "We've had a great year, and your contributions have been recognized. We'd like to offer you a 3% merit increase."\n\nHow do you respond?`
+      intro: `Let's role-play your annual review. I'll be your manager.\n\nSetting: You've been at the company 2 years. You've led two major projects. Industry data shows you are underpaid by ~15%. Your manager opens the review.\n\n**Manager:** "We've had a great year, and your contributions have been recognized. We'd like to offer you a 3% merit increase."\n\nHow do you respond?`
     },
     freelance: {
       status: 'Freelance Rate Role-Play Active',
@@ -1674,7 +1674,7 @@
     },
     vendor: {
       status: 'Vendor Negotiation Role-Play Active',
-      intro: `I'm a software vendor. You're renewing a $12k/year contract and want better terms.\n\n**Vendor:** "Happy to discuss renewal! Our standard rate is the same as last year — $12,000 annually."\n\nHow do you open the negotiation?`
+      intro: `I am a software vendor. You're renewing a $12k/year contract and want better terms.\n\n**Vendor:** "Happy to discuss renewal! Our standard rate is the same as last year — $12,000 annually."\n\nHow do you open the negotiation?`
     }
   };
 
@@ -1706,10 +1706,10 @@
   }
 
   const responses = [
-    "Strong opening! You established your value with data before making an ask — that's exactly right. One refinement: instead of saying 'I think I deserve,' try 'Based on my contributions and market research, I'm looking at X.' Removes the hedging. Want to try again with that adjustment?",
-    "Good instinct to push back rather than accept. Notice you held your ground — that's crucial. Now try adding a specific number. Vague asks get vague answers. What exact figure would you propose here?",
+    "Strong opening! You established your value with data before making an ask — that is exactly right. One refinement: instead of saying 'I think I deserve,' try 'Based on my contributions and market research, I am looking at X.' Removes the hedging. Want to try again with that adjustment?",
+    "Good instinct to push back rather than accept. Notice you held your ground — that is crucial. Now try adding a specific number. Vague asks get vague answers. What exact figure would you propose here?",
     "Excellent use of questions! Asking 'what flexibility looks like' puts the burden back on them to solve the problem, not you to lower your price. This is advanced technique. How do you follow up if they say 'we genuinely have no more budget'?",
-    "You're doing well. One thing to watch: don't apologize or soften your ask with 'I'm sorry to ask, but...' Your request is professional and reasonable. Own it. Restate that last point without the hedge — go ahead.",
+    "You're doing well. One thing to watch: do not apologize or soften your ask with 'I am sorry to ask, but...' Your request is professional and reasonable. Own it. Restate that last point without the hedge — go ahead.",
     "Really solid! That silence after your number is strategic gold. In real life, the instinct is to fill it — resist that. The next response from them will often be better than their first offer. Keep going — how do you respond if they say 'let us think about it'?"
   ];
 
@@ -1780,9 +1780,9 @@
         const fallbacks = [
           'That was a solid start, ' + userName + '. One thing to strengthen: try leading with your market research data before making your ask. Data anchors the conversation in fact, not feeling.',
           'Good instinct on that approach! Now try this: after you state your number, stop talking completely. Count to 10 in your head. The silence creates pressure on them, not you.',
-          'I noticed you softened your ask at the end — that's very common. Try removing the hedge. Instead of "I was hoping for..." say "I'm looking for $X." Declarative statements land differently.',
-          'Strong move naming the specific number. One upgrade: add your research source. "Based on my LinkedIn Salary data for this role in this market, I'm looking at $X" is much harder to dismiss.',
-          'The framing could shift from what you want to what the data says. Instead of "I deserve more," try "the market rate for this role is X — I'd like us to get there."'
+          'I noticed you softened your ask at the end — very common. Try removing the hedge. Instead of "I was hoping for..." say "I am looking for $X." Declarative statements land differently.',
+          'Strong move naming the specific number. One upgrade: add your research source. "Based on my LinkedIn Salary data for this role in this market, I am looking at $X" is much harder to dismiss.',
+          'The framing could shift from what you want to what the data says. Instead of "I deserve more," try "the market rate for this role is X — I would like us to get there."'
         ];
         reply = fallbacks[Math.floor(Math.random() * fallbacks.length)];
       }
@@ -1797,7 +1797,7 @@
       const errFallbacks = [
         'Let me give you some coaching on that: ' + userName + ', the key in any negotiation is to separate your position (what you want) from your interest (why you want it). Tell me more about your situation.',
         'Great practice! One thing I want you to work on: the pause after you state your number. Say it, then stop. The discomfort you feel in that silence is temporary. The money is permanent.',
-        'Strong energy. Now let's refine the words. What specific phrase did you use to make your ask? I want to give you targeted feedback on the exact language.'
+        'Strong energy. Now let us refine the words. What specific phrase did you use to make your ask? I want to give you targeted feedback on the exact language.'
       ];
       veraHistory.push({ role: 'assistant', content: errFallbacks[Math.floor(Math.random() * errFallbacks.length)] });
       addMessage('ai', veraHistory[veraHistory.length-1].content);
