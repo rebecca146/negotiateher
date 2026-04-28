@@ -3149,10 +3149,10 @@ function openTrack(trackId){
     
     let rightEl = '';
     if(isComplete) rightEl = '<span style="font-size:0.7rem;background:rgba(155,95,192,0.1);color:var(--gold);padding:3px 10px;border-radius:100px;font-weight:600;">Completed ✓</span>';
-    else if(isLocked) rightEl = '<button onclick="event.stopPropagation();showUpgrade('unlock all lessons')" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:0.75rem;font-weight:600;">Upgrade</button>';
+    else if(isLocked) rightEl = '<button onclick="event.stopPropagation();showUpgrade(&quot;unlock all lessons&quot;)" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:0.75rem;font-weight:600;">Upgrade</button>';
     else rightEl = '<span style="font-size:1.2rem;">→</span>';
     
-    const clickAttr = !isLocked ? ' onclick="openLesson(\'' + lesson.id + '\')"' : '';
+    const clickAttr = isLocked ? '' : ' onclick="openLesson(\"' + lesson.id + '\")'";
     const cursorStyle = isLocked ? 'default' : 'pointer';
     const opacityStyle = isLocked ? '0.6' : '1';
     
