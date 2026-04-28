@@ -1776,16 +1776,20 @@
       }
       
       if (!reply) {
-        // Smart fallbacks based on context
-        const fallbacks = [
-          'That was a solid start, ' + userName + '. One thing to strengthen: try leading with your market research data before making your ask. Data anchors the conversation in fact, not feeling.',
-          'Good instinct on that approach! Now try this: after you state your number, stop talking completely. Count to 10 in your head. The silence creates pressure on them, not you.',
-          'I noticed you softened your ask at the end — very common. Try removing the hedge. Instead of "I was hoping for..." say "I am looking for $X." Declarative statements land differently.',
-          'Strong move naming the specific number. One upgrade: add your research source. "Based on my LinkedIn Salary data for this role in this market, I am looking at $X" is much harder to dismiss.',
-          'The framing could shift from what you want to what the data says. Instead of "I deserve more," try "the market rate for this role is X — I would like us to get there."'
-        ];
-        reply = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-      }
+        // Context-aware fallbacks based on message content
+        const msgLower = text.toLowerCase();
+        if(msgLower.includes('salary') || msgLower.includes('raise') || msgLower.includes('pay') || msgLower.includes('compensation')){
+          reply = 'Good instinct going straight to compensation. Before stating a number, anchor with research: say "Based on market data for this role, the range is X to Y." This frames your ask as a fact, not a wish. What number were you planning to open with?';
+        } else if(msgLower.includes('no') || msgLower.includes('budget') || msgLower.includes('refuse') || msgLower.includes('cannot')){
+          reply = 'Getting a no is not the end — it is information. Ask: "Help me understand what is driving that constraint." This opens the door without confrontation. The goal is to understand their position so you can reframe yours effectively.';
+        } else if(msgLower.includes('nervous') || msgLower.includes('scared') || msgLower.includes('anxious') || msgLower.includes('afraid')){
+          reply = 'That nervousness is energy — reframe it as excitement. Research shows that shift measurably improves negotiation performance. Your preparation is your confidence. What specifically feels most daunting about this negotiation?';
+        } else if(text.length < 30){
+          reply = 'Say more — I want to give you specific feedback on your exact words. Walk me through what you would actually say in this situation, as if I am the person sitting across from you.';
+        } else {
+          reply = 'One coaching note: watch for hedging language like "I was thinking" or "maybe" or "if possible." Replace those with direct statements. "I am looking for X" lands completely differently than "I was hoping for X." Try rephrasing your last message with that in mind.';
+        }
+      } // end if(!reply)
       
       // Add to history
       veraHistory.push({ role: 'assistant', content: reply });
@@ -3238,7 +3242,7 @@ function openLesson(lessonId){
   if(isComplete){
     completeBtn = '<span style="background:rgba(155,95,192,0.1);color:var(--gold);padding:10px 20px;border-radius:9px;font-size:0.82rem;font-weight:600;">✓ Completed</span>';
   } else {
-    completeBtn = '<button onclick="completeLessonBtn(\"' + lesson.id + '\",\"' + track.id + '\")" style="background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:9px;padding:10px 24px;cursor:pointer;font-size:0.88rem;font-weight:700;">Mark as Complete ✓</button>';
+    completeBtn = '<button id="completeBtnEl" data-lesson="' + lesson.id + '" data-track="' + track.id + '" style="background:linear-gradient(135deg,var(--gold),var(--sage));color:white;border:none;border-radius:9px;padding:10px 24px;cursor:pointer;font-size:0.88rem;font-weight:700;">Mark as Complete ✓</button>';
   }
   
   document.getElementById('lessonContent').innerHTML = 
@@ -3258,6 +3262,16 @@ function openLesson(lessonId){
     + completeBtn
     + '</div></div>';
   
+  // Add click handler for complete button using data attributes
+  setTimeout(function(){
+    const btn = document.getElementById('completeBtnEl');
+    if(btn){
+      btn.addEventListener('click', function(){
+        completeLessonBtn(btn.dataset.lesson, btn.dataset.track);
+      });
+    }
+  }, 100);
+
   // Add lesson styles if not already added
   if(!document.getElementById('lessonStyles')){
     const style = document.createElement('style');
